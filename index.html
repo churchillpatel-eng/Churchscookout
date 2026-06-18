@@ -30,7 +30,7 @@
       <button class="nav-btn" onclick="showView('recipes')">Recipes</button>
       <button class="nav-btn" onclick="showView('categories')">Categories</button>
       <button class="nav-btn" onclick="showView('about')">About</button>
-      <button class="nav-btn admin-btn" onclick="showAdminGate()">🔒 Add Recipe</button>
+      <button class="nav-btn admin-btn" onclick="showAdminGate()" style="display:none">🔒 Add Recipe</button>
     </nav>
     <button class="hamburger" onclick="toggleMobileNav()">☰</button>
     <nav class="mobile-nav" id="mobile-nav">
@@ -38,7 +38,7 @@
       <button onclick="showView('recipes');toggleMobileNav()">Recipes</button>
       <button onclick="showView('categories');toggleMobileNav()">Categories</button>
       <button onclick="showView('about');toggleMobileNav()">About</button>
-      <button onclick="showAdminGate();toggleMobileNav()">🔒 Add Recipe</button>
+      <button onclick="showAdminGate();toggleMobileNav()" style="display:none">🔒 Add Recipe</button>
     </nav>
   </header>
 
