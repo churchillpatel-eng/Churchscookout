@@ -10,7 +10,8 @@ const CATEGORY_META = {
   seafood:  { label: "Seafood",            emoji: "🦐" },
   sides:    { label: "Sides",              emoji: "🌽" },
   sauces:    { label: "Sauces & Marinades", emoji: "🫙" },
-  marinades: { label: "Marinades",          emoji: "🫙" },
+  marinades:  { label: "Marinades",          emoji: "🫙" },
+  barbeque:   { label: "Barbeque",           emoji: "🔥" },
   desserts: { label: "Desserts",           emoji: "🍦" },
   other:    { label: "Other",              emoji: "🍽️" },
 };
@@ -131,7 +132,7 @@ const RECIPES = [
     title: "Paneer Tikka",
     description: "Deeply marinated paneer with peppers and onion, double-basted in butter and charred in a tandoor. A two-marinade technique and smoked mustard oil take this far beyond the standard version.",
     servings: 4,
-    category: "marinades",
+    category: "barbeque",
     emoji: "🧀",
     ingredients: [
       { amount: "500g",      item: "paneer, cut into thick 4cm cubes" },
