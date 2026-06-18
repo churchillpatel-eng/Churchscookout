@@ -90,7 +90,7 @@ const RECIPES = [
   },
   {
     id: 2,
-    dietary: "meat",
+    dietary: "vegetarian",
     image: "tandoori.jpg",
     title: "Tandoori Marinade",
     yield: "1 serving is roughly ~2 lbs of chicken",
