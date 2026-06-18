@@ -305,8 +305,16 @@ function showDetail(id) {
       <div class="rte-body">
         <div class="rte-ingredients-col">
           <h3 class="rte-section-title">Ingredients</h3>
+          <div class="servings-scaler">
+            <span class="servings-label">Servings</span>
+            <div class="servings-controls">
+              <button onclick="changeServings(${recipe.id || '"' + recipe._localId + '"'}, -1)">−</button>
+              <span id="servings-display">${recipe.servings || 4}</span>
+              <button onclick="changeServings(${recipe.id || '"' + recipe._localId + '"'}, 1)">+</button>
+            </div>
+          </div>
           <p class="rte-ing-hint">Tap an ingredient to cross it off</p>
-          <ul class="rte-ingredients-list">${ingredientsHtml}</ul>
+          <ul class="rte-ingredients-list" id="ingredients-display">${ingredientsHtml}</ul>
         </div>
 
         <div class="rte-steps-col">
@@ -420,6 +428,65 @@ function clearForm() {
   document.getElementById("export-box").style.display = "none";
   addIngredientRow(); addIngredientRow(); addIngredientRow();
   addStepRow(); addStepRow();
+}
+
+// ── Servings Scaler ──────────────────────────────────────────────────
+let currentServings = null;
+let baseServings = null;
+let activeRecipeId = null;
+
+function changeServings(id, delta) {
+  const recipe = allRecipes().find(r => r.id === id || r._localId === id);
+  if (!recipe) return;
+
+  if (activeRecipeId !== id) {
+    baseServings = recipe.servings || 4;
+    currentServings = baseServings;
+    activeRecipeId = id;
+  }
+
+  currentServings = Math.max(1, currentServings + delta);
+  document.getElementById("servings-display").textContent = currentServings;
+
+  const ratio = currentServings / baseServings;
+  const list = document.getElementById("ingredients-display");
+  list.innerHTML = recipe.ingredients.map(ing => `
+    <li class="ing-item" onclick="this.classList.toggle('checked')">
+      <span class="ing-check">✓</span>
+      <span class="ing-amount">${scaleAmount(ing.amount, ratio)}</span>
+      <span class="ing-name">${ing.item}</span>
+    </li>
+  `).join("");
+}
+
+function scaleAmount(amount, ratio) {
+  if (ratio === 1) return amount;
+  // Match a leading number (integer or decimal or fraction like 1/4)
+  return amount.replace(/^(\d+\/\d+|\d+\.?\d*)/, match => {
+    let num;
+    if (match.includes("/")) {
+      const [a, b] = match.split("/");
+      num = parseInt(a) / parseInt(b);
+    } else {
+      num = parseFloat(match);
+    }
+    const scaled = num * ratio;
+    return formatNumber(scaled);
+  });
+}
+
+function formatNumber(n) {
+  if (n === Math.round(n)) return String(Math.round(n));
+  // Common fractions
+  const fractions = [[1/8,"⅛"],[1/4,"¼"],[1/3,"⅓"],[3/8,"⅜"],[1/2,"½"],[5/8,"⅝"],[2/3,"⅔"],[3/4,"¾"],[7/8,"⅞"]];
+  const whole = Math.floor(n);
+  const frac = n - whole;
+  for (const [val, sym] of fractions) {
+    if (Math.abs(frac - val) < 0.07) {
+      return whole > 0 ? `${whole} ${sym}` : sym;
+    }
+  }
+  return n.toFixed(1).replace(/\.0$/, "");
 }
 
 function toggleMobileNav() {
