@@ -83,6 +83,7 @@ const RECIPES = [
   {
     id: 2,
     title: "Tandoori Marinade",
+    yield: "1 serving is roughly ~2 lbs of chicken",
     description: "A deeply spiced, yogurt-based marinade built for high heat. Authentic tandoori flavor with bloomed spices, ginger-garlic, and the unmistakable depth of kala namak.",
     servings: 1,
     category: "marinades",
@@ -325,7 +326,10 @@ function showDetail(id) {
             <h2 class="rte-title">${recipe.title}</h2>
             <p class="rte-desc">${recipe.description}</p>
           </div>
-          <button class="rte-print-btn" onclick="window.print()">🖨 Print</button>
+          <div class="rte-print-col">
+            ${recipe.yield ? `<p class="rte-yield"><strong>${recipe.yield}</strong></p>` : ""}
+            <button class="rte-print-btn" onclick="window.print()">🖨 Print</button>
+          </div>
         </div>
 
         <div class="rte-meta-bar">
