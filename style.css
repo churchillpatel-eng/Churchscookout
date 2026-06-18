@@ -432,6 +432,25 @@ main { min-height: 80vh; }
   font-weight: 300;
 }
 
+.card-dietary {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+.card-dietary--meat        { color: #b94040; background: #fdf0f0; border-color: #f0c0c0; }
+.card-dietary--vegetarian  { color: #5a7a3a; background: #f2f7ec; border-color: #c5dba8; }
+.card-dietary--vegan       { color: #2e7a4f; background: #eaf5ef; border-color: #a0d4b8; }
+
+.rte-dietary--meat        { color: #b94040; }
+.rte-dietary--vegetarian  { color: #5a7a3a; }
+.rte-dietary--vegan       { color: #2e7a4f; }
+
 .card-meta {
   font-size: 0.78rem;
   color: var(--muted);

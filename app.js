@@ -3,6 +3,12 @@
 const ADMIN_PASSWORD = "Cookout2026!";
 
 // ── Category Config ─────────────────────────────────────────────────
+const DIETARY_META = {
+  meat:        { label: "Meat",        emoji: "🥩" },
+  vegetarian:  { label: "Vegetarian",  emoji: "🥗" },
+  vegan:       { label: "Vegan",       emoji: "🌱" },
+};
+
 const CATEGORY_META = {
   burgers:  { label: "Burgers",            emoji: "🍔" },
   chicken:  { label: "Chicken",            emoji: "🍗" },
@@ -22,6 +28,7 @@ const CATEGORY_META = {
 const RECIPES = [
   {
     id: 1,
+    dietary: "meat",
     title: "Green Garlic, Mint & Cilantro Chicken Burgers",
     description: "A bright, herb-forward chicken burger built around mint, cilantro, and green garlic, ground fresh with your KitchenAid attachment for the best texture.",
     servings: 1,
@@ -83,6 +90,7 @@ const RECIPES = [
   },
   {
     id: 2,
+    dietary: "meat",
     title: "Tandoori Marinade",
     yield: "1 serving is roughly ~2 lbs of chicken",
     description: "A deeply spiced, yogurt-based marinade built for high heat. Authentic tandoori flavor with bloomed spices, ginger-garlic, and the unmistakable depth of kala namak.",
@@ -129,6 +137,7 @@ const RECIPES = [
   },
   {
     id: 3,
+    dietary: "vegetarian",
     title: "Paneer Tikka",
     description: "Deeply marinated paneer with peppers and onion, double-basted in butter and charred in a tandoor. A two-marinade technique and smoked mustard oil take this far beyond the standard version.",
     servings: 4,
@@ -238,6 +247,7 @@ function renderHome() {
           <span>🍽️ ${r.servings} servings</span>
           <span>📋 ${r.ingredients.length} ingredients</span>
         </div>
+        ${r.dietary ? `<div class="card-dietary card-dietary--${r.dietary}">${DIETARY_META[r.dietary]?.emoji} ${DIETARY_META[r.dietary]?.label}</div>` : ""}
       </div>
     </div>
   `).join("");
@@ -327,6 +337,7 @@ function renderRecipes(filterCategory) {
           <span>🍽️ ${r.servings} servings</span>
           <span>📋 ${r.ingredients.length} ingredients</span>
         </div>
+        ${r.dietary ? `<div class="card-dietary card-dietary--${r.dietary}">${DIETARY_META[r.dietary]?.emoji} ${DIETARY_META[r.dietary]?.label}</div>` : ""}
       </div>
     </div>
   `).join("");
@@ -422,6 +433,10 @@ function showDetail(id) {
             <span class="rte-meta-label">Category</span>
             <span class="rte-meta-value">${cat?.emoji || ""} ${cat?.label || recipe.category}</span>
           </div>
+          <div class="rte-meta-item">
+            <span class="rte-meta-label">Dietary</span>
+            <span class="rte-meta-value rte-dietary--${recipe.dietary || ""}">${DIETARY_META[recipe.dietary]?.emoji || "—"} ${DIETARY_META[recipe.dietary]?.label || "—"}</span>
+          </div>
         </div>
       </div>
 
@@ -513,6 +528,7 @@ function saveRecipe() {
     title,
     description: document.getElementById("f-desc").value.trim(),
     servings: parseInt(document.getElementById("f-servings").value) || null,
+    dietary: document.getElementById("f-dietary").value,
     category: document.getElementById("f-category").value,
     emoji: CATEGORY_META[document.getElementById("f-category").value]?.emoji || "🍽️",
     ingredients,
