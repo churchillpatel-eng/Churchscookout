@@ -321,15 +321,13 @@ function showDetail(id) {
 
       <div class="rte-card-header">
         <div class="rte-card-title-row">
-          <div>
+          <div class="rte-title-block">
             <div class="rte-category">${cat?.label || recipe.category}</div>
             <h2 class="rte-title">${recipe.title}</h2>
             <p class="rte-desc">${recipe.description}</p>
-          </div>
-          <div class="rte-print-col">
             ${recipe.yield ? `<p class="rte-yield"><strong>${recipe.yield}</strong></p>` : ""}
-            <button class="rte-print-btn" onclick="window.print()">🖨 Print</button>
           </div>
+          <button class="rte-print-btn" onclick="window.print()">🖨 Print</button>
         </div>
 
         <div class="rte-meta-bar">

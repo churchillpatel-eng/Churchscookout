@@ -538,25 +538,15 @@ main { min-height: 80vh; }
   max-width: 580px;
 }
 
-.rte-print-col {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-  flex-shrink: 0;
-}
+.rte-title-block { flex: 1; }
 
 .rte-yield {
   font-size: 0.82rem;
   color: var(--dark);
-  text-align: right;
-  font-style: italic;
+  margin-top: 6px;
 }
 
-.rte-yield strong {
-  font-weight: 700;
-  font-style: normal;
-}
+.rte-yield strong { font-weight: 700; }
 
 .rte-print-btn {
   background: var(--bg-warm);
