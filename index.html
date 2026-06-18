@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Churchill's Cookout</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <span class="flame">🔥</span>
+        <div>
+          <h1>Churchill's Cookout</h1>
+          <p class="tagline">Recipes worth firing up the grill for</p>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-btn active" onclick="showView('recipes')">Recipes</button>
+        <button class="nav-btn" onclick="showView('categories')">Categories</button>
+        <button class="nav-btn admin-btn" onclick="showAdminGate()">🔒 Add Recipe</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWS -->
+  <main>
+
+    <!-- RECIPES VIEW -->
+    <div id="view-recipes" class="view active">
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search recipes..." oninput="renderRecipes()" />
+        <select id="category-filter" onchange="renderRecipes()">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+      <div id="recipe-grid" class="recipe-grid"></div>
+    </div>
+
+    <!-- CATEGORIES VIEW -->
+    <div id="view-categories" class="view">
+      <div id="categories-grid" class="categories-grid"></div>
+    </div>
+
+    <!-- RECIPE DETAIL VIEW -->
+    <div id="view-detail" class="view">
+      <button class="back-btn" onclick="showView('recipes')">← Back to Recipes</button>
+      <div id="recipe-detail"></div>
+    </div>
+
+    <!-- ADMIN GATE VIEW -->
+    <div id="view-admin-gate" class="view">
+      <div class="gate-card">
+        <div class="gate-icon">🔒</div>
+        <h2>Private Kitchen</h2>
+        <p>Enter your password to add or manage recipes.</p>
+        <input type="password" id="admin-password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()" />
+        <button class="btn-primary" onclick="checkPassword()">Enter</button>
+        <p id="password-error" class="error-msg" style="display:none">Incorrect password. Try again.</p>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL VIEW -->
+    <div id="view-admin" class="view">
+      <div class="admin-header">
+        <h2>🍳 Add a New Recipe</h2>
+        <button class="btn-secondary" onclick="showView('recipes')">← Back to Site</button>
+      </div>
+
+      <div class="admin-form-card">
+        <form id="recipe-form" onsubmit="return false;">
+
+          <div class="form-section">
+            <h3>Basic Info</h3>
+            <div class="form-group">
+              <label>Recipe Title *</label>
+              <input type="text" id="f-title" placeholder="e.g. Smoked Brisket" required />
+            </div>
+            <div class="form-group">
+              <label>Short Description *</label>
+              <textarea id="f-desc" rows="2" placeholder="One or two sentences about this recipe."></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Servings</label>
+                <input type="number" id="f-servings" placeholder="e.g. 8" min="1" />
+              </div>
+              <div class="form-group">
+                <label>Category</label>
+                <select id="f-category">
+                  <option value="burgers">Burgers</option>
+                  <option value="chicken">Chicken</option>
+                  <option value="beef">Beef</option>
+                  <option value="seafood">Seafood</option>
+                  <option value="sides">Sides</option>
+                  <option value="sauces">Sauces & Marinades</option>
+                  <option value="desserts">Desserts</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Ingredients</h3>
+            <div id="ingredients-list"></div>
+            <button type="button" class="btn-add" onclick="addIngredientRow()">+ Add Ingredient</button>
+          </div>
+
+          <div class="form-section">
+            <h3>Steps</h3>
+            <div id="steps-list"></div>
+            <button type="button" class="btn-add" onclick="addStepRow()">+ Add Step</button>
+          </div>
+
+          <div class="form-section">
+            <h3>Notes (Optional)</h3>
+            <textarea id="f-notes" rows="4" placeholder="Tips, substitutions, make-ahead advice..."></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-primary" onclick="saveRecipe()">Save Recipe</button>
+            <button type="button" class="btn-secondary" onclick="clearForm()">Clear Form</button>
+          </div>
+
+        </form>
+      </div>
+
+      <div id="export-box" style="display:none" class="export-box">
+        <h3>Recipe Saved!</h3>
+        <p>Copy the code below and add it to the <code>recipes</code> array in <code>app.js</code> to make it permanent on the site.</p>
+        <textarea id="export-code" rows="20" readonly></textarea>
+        <button class="btn-secondary" onclick="copyExport()">Copy to Clipboard</button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Churchill's Cookout &copy; 2026 &nbsp;|&nbsp; Made with 🔥</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
