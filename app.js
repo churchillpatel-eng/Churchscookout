@@ -9,7 +9,8 @@ const CATEGORY_META = {
   beef:     { label: "Beef",               emoji: "🥩" },
   seafood:  { label: "Seafood",            emoji: "🦐" },
   sides:    { label: "Sides",              emoji: "🌽" },
-  sauces:   { label: "Sauces & Marinades", emoji: "🫙" },
+  sauces:    { label: "Sauces & Marinades", emoji: "🫙" },
+  marinades: { label: "Marinades",          emoji: "🫙" },
   desserts: { label: "Desserts",           emoji: "🍦" },
   other:    { label: "Other",              emoji: "🍽️" },
 };
@@ -78,6 +79,51 @@ const RECIPES = [
       },
     ],
     notes: "Green garlic is milder and grassier than mature garlic — it layers in nicely without overpowering. Yogurt does double duty: it tenderizes the chicken and keeps patties moist as they cook. Use the coarse die for the KitchenAid grinder; the fine die compacts chicken into paste. For some char, finish patties under a hot broiler for 60–90 seconds after griddling."
+  },
+  {
+    id: 2,
+    title: "Tandoori Marinade",
+    description: "A deeply spiced, yogurt-based marinade built for high heat. Authentic tandoori flavor with bloomed spices, ginger-garlic, and the unmistakable depth of kala namak.",
+    servings: 1,
+    category: "marinades",
+    emoji: "🫙",
+    ingredients: [
+      { amount: "½ cup",    item: "full-fat Greek yogurt" },
+      { amount: "2 tbsp",   item: "mustard oil (or neutral oil)" },
+      { amount: "2 tbsp",   item: "fresh lemon juice" },
+      { amount: "2.5 tbsp", item: "ginger paste" },
+      { amount: "2.5 tbsp", item: "garlic paste" },
+      { amount: "2 tsp",    item: "Kashmiri red chili powder" },
+      { amount: "1 tsp",    item: "cayenne pepper" },
+      { amount: "1 tsp",    item: "cumin powder" },
+      { amount: "1 tsp",    item: "coriander powder" },
+      { amount: "1 tsp",    item: "garam masala" },
+      { amount: "½ tsp",    item: "smoked paprika" },
+      { amount: "½ tsp",    item: "turmeric" },
+      { amount: "½ tsp",    item: "ajwain (carom seeds), lightly crushed" },
+      { amount: "½ tsp",    item: "black salt (kala namak)" },
+      { amount: "1 tsp",    item: "kosher salt" },
+      { amount: "1 tsp",    item: "chaat masala (for finishing)" },
+    ],
+    steps: [
+      {
+        text: "Burn the oil: Heat the mustard oil in a small pan until it just begins to smoke. Pour it directly over the dry spices (Kashmiri chili, cayenne, cumin, coriander, garam masala, paprika, turmeric, ajwain) in a bowl and stir immediately — this blooms the spices and removes the raw edge from mustard oil.",
+        timer: null
+      },
+      {
+        text: "Build the marinade: Once the spice-oil mixture has cooled slightly, whisk in the Greek yogurt, lemon juice, ginger paste, garlic paste, black salt, and kosher salt until fully combined and smooth.",
+        timer: null
+      },
+      {
+        text: "Marinate: Score your protein deeply (paneer, chicken, lamb chops) and coat thoroughly. Cover and refrigerate. For paneer, 2–4 hours is ideal. For chicken or lamb, go overnight.",
+        timer: "2–4 hrs (paneer) / overnight (meat)"
+      },
+      {
+        text: "Cook and finish: Cook at the highest heat you have — a very hot grill or 500°F oven broiler works well. Let it char slightly on the edges. Sprinkle chaat masala over right before serving for that authentic tangy finish.",
+        timer: null
+      },
+    ],
+    notes: "Heat level: This is genuinely spicy. Dial back the cayenne to ½ tsp for medium heat, or cut it entirely and lean on Kashmiri chili for color and mild warmth.\n\nMustard oil tip: If you can find it at an Indian grocery, use it — the pungency mellows completely when heated and adds an unmistakably authentic flavor.\n\nKala namak: The sulfurous, eggy depth of black salt is what makes restaurant-style tandoori taste \"right.\" Don't skip it if you can find it.\n\nCharcoal smoke trick: For a real tandoor-smoke note, place a small piece of burning charcoal in a foil cup in the marinating bowl, drizzle ghee on it, cover immediately for 5 minutes, then remove before cooking."
   },
 ];
 
