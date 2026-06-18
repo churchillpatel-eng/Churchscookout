@@ -30,7 +30,7 @@ const RECIPES = [
     id: 1,
     dietary: "meat",
     title: "Green Garlic, Mint & Cilantro Chicken Burgers",
-    description: "A bright, herb-forward chicken burger built around mint, cilantro, and green garlic, ground fresh with your KitchenAid attachment for the best texture.",
+    description: "A bright, herb-forward chicken burger built around mint, cilantro, and green garlic.",
     servings: 1,
     category: "burgers",
     emoji: "🍔",
