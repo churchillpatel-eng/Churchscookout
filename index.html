@@ -4,26 +4,39 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Churchill's Cookout</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <span>Indian-inspired recipes with a modern twist</span>
+  </div>
+
   <!-- HEADER -->
   <header>
-    <div class="header-inner">
-      <div class="logo" onclick="showView('home')" style="cursor:pointer">
-        <span class="flame">🔥</span>
-        <div>
-          <h1>Churchill's Cookout</h1>
-          <p class="tagline">Recipes worth firing up the grill for</p>
-        </div>
-      </div>
-      <nav>
-        <button class="nav-btn" onclick="showView('recipes')">Recipes</button>
-        <button class="nav-btn" onclick="showView('categories')">Categories</button>
-        <button class="nav-btn admin-btn" onclick="showAdminGate()">🔒 Add Recipe</button>
-      </nav>
+    <div class="header-logo" onclick="showView('home')">
+      <h1>Churchill's Cookout</h1>
+      <p class="tagline">recipes &nbsp;•&nbsp; stories &nbsp;•&nbsp; flavor</p>
     </div>
+    <nav class="main-nav">
+      <button class="nav-btn" onclick="showView('home')">Home</button>
+      <button class="nav-btn" onclick="showView('recipes')">Recipes</button>
+      <button class="nav-btn" onclick="showView('categories')">Categories</button>
+      <button class="nav-btn" onclick="showView('about')">About</button>
+      <button class="nav-btn admin-btn" onclick="showAdminGate()">🔒 Add Recipe</button>
+    </nav>
+    <button class="hamburger" onclick="toggleMobileNav()">☰</button>
+    <nav class="mobile-nav" id="mobile-nav">
+      <button onclick="showView('home');toggleMobileNav()">Home</button>
+      <button onclick="showView('recipes');toggleMobileNav()">Recipes</button>
+      <button onclick="showView('categories');toggleMobileNav()">Categories</button>
+      <button onclick="showView('about');toggleMobileNav()">About</button>
+      <button onclick="showAdminGate();toggleMobileNav()">🔒 Add Recipe</button>
+    </nav>
   </header>
 
   <!-- MAIN VIEWS -->
@@ -31,46 +44,72 @@
 
     <!-- HOME VIEW -->
     <div id="view-home" class="view active">
-
-      <!-- Hero Image -->
       <div class="home-hero">
-        <img src="hero.jpg" alt="Church's Cookout cutting board with food" class="home-hero-img" />
+        <img src="hero.jpg" alt="Churchill's Cookout cutting board" class="home-hero-img" />
         <div class="home-hero-overlay">
+          <p class="hero-eyebrow">Welcome to</p>
           <h2>Churchill's Cookout</h2>
-          <p>Made with love, rooted in tradition, and always cooked for the people.</p>
+          <p class="hero-sub">Made with love, rooted in tradition, and always cooked for the people.</p>
           <button class="btn-primary hero-cta" onclick="showView('recipes')">Browse Recipes</button>
         </div>
       </div>
 
-      <!-- About Me -->
-      <div class="about-section">
-        <div class="about-photo-col">
-          <div class="about-monogram">C</div>
-        </div>
-        <div class="about-text-col">
-          <div class="about-label">About Me</div>
-          <h3 class="about-name">Hi, I'm Churchill.</h3>
-          <p>Over the years I've been creating and cooking for my friends and family. I love to make meals for my people — and watching their faces light up is one of the best feelings in the world.</p>
-          <p>Many of my recipes are rooted in things I learned from my parents, who were born and raised in India. Those bold, layered flavors are still found in everything I cook, just with my own spin on them.</p>
-          <p>The other half of my recipes are dishes I've created for my wife, who is Vegan. Over the last five years I've learned that I can make vegetables exciting for everyone at the table.</p>
-        </div>
+      <div class="home-intro">
+        <div class="divider-ornament"><span>✦</span></div>
+        <p class="home-intro-text">"Cooking is the greatest gift you can give someone — it says I thought about you before you even arrived."</p>
       </div>
 
-      <div class="home-sections">
-        <div class="home-section">
-          <h3>Latest Recipes</h3>
+      <div class="home-body">
+
+        <section class="home-section">
+          <div class="section-header">
+            <h2 class="section-title">Latest Recipes</h2>
+            <button class="section-link" onclick="showView('recipes')">View All →</button>
+          </div>
           <div id="home-latest" class="recipe-grid"></div>
+        </section>
+
+        <div class="about-strip">
+          <div class="about-strip-img">
+            <div class="about-monogram">C</div>
+          </div>
+          <div class="about-strip-text">
+            <p class="about-eyebrow">About Churchill</p>
+            <h3>Hi, I'm Churchill.</h3>
+            <p>Over the years I've been creating and cooking for my friends and family. I love to make meals for my people — and watching their faces light up is one of the best feelings in the world. My recipes are rooted in my Indian heritage, my own creativity, and a deep love for making vegan cooking exciting for everyone at the table.</p>
+            <button class="btn-outline" onclick="showView('about')">Read My Story</button>
+          </div>
         </div>
 
-        <div class="home-section">
-          <h3>Browse by Category</h3>
+        <section class="home-section">
+          <div class="section-header">
+            <h2 class="section-title">Browse by Category</h2>
+          </div>
           <div id="home-categories" class="categories-grid"></div>
-        </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ABOUT VIEW -->
+    <div id="view-about" class="view">
+      <div class="about-hero">
+        <div class="about-monogram-lg">C</div>
+        <h2>About Churchill</h2>
+        <p class="about-hero-sub">Cook. Creator. Storyteller.</p>
+      </div>
+      <div class="about-content">
+        <p>Over the years I've been creating and cooking for my friends and family. I love to make meals for my people — and watching their faces light up is one of the best feelings in the world.</p>
+        <p>Many of my recipes are rooted in things I learned from my parents, who were born and raised in India. Those bold, layered flavors are still found in everything I cook, just with my own spin on them.</p>
+        <p>The other half of my recipes are dishes I've created for my wife, who is Vegan. Over the last five years I've learned that I can make vegetables exciting for everyone at the table.</p>
       </div>
     </div>
 
     <!-- RECIPES VIEW -->
-    <div id="view-recipes" class="view active">
+    <div id="view-recipes" class="view">
+      <div class="page-header">
+        <h2>All Recipes</h2>
+      </div>
       <div class="search-bar">
         <input type="text" id="search-input" placeholder="Search recipes..." oninput="renderRecipes()" />
         <select id="category-filter" onchange="renderRecipes()">
@@ -82,6 +121,9 @@
 
     <!-- CATEGORIES VIEW -->
     <div id="view-categories" class="view">
+      <div class="page-header">
+        <h2>Categories</h2>
+      </div>
       <div id="categories-grid" class="categories-grid"></div>
     </div>
 
@@ -106,13 +148,11 @@
     <!-- ADMIN PANEL VIEW -->
     <div id="view-admin" class="view">
       <div class="admin-header">
-        <h2>🍳 Add a New Recipe</h2>
-        <button class="btn-secondary" onclick="showView('recipes')">← Back to Site</button>
+        <h2>Add a New Recipe</h2>
+        <button class="btn-outline" onclick="showView('recipes')">← Back to Site</button>
       </div>
-
       <div class="admin-form-card">
         <form id="recipe-form" onsubmit="return false;">
-
           <div class="form-section">
             <h3>Basic Info</h3>
             <div class="form-group">
@@ -143,45 +183,48 @@
               </div>
             </div>
           </div>
-
           <div class="form-section">
             <h3>Ingredients</h3>
             <div id="ingredients-list"></div>
             <button type="button" class="btn-add" onclick="addIngredientRow()">+ Add Ingredient</button>
           </div>
-
           <div class="form-section">
             <h3>Steps</h3>
             <div id="steps-list"></div>
             <button type="button" class="btn-add" onclick="addStepRow()">+ Add Step</button>
           </div>
-
           <div class="form-section">
             <h3>Notes (Optional)</h3>
             <textarea id="f-notes" rows="4" placeholder="Tips, substitutions, make-ahead advice..."></textarea>
           </div>
-
           <div class="form-actions">
             <button type="button" class="btn-primary" onclick="saveRecipe()">Save Recipe</button>
-            <button type="button" class="btn-secondary" onclick="clearForm()">Clear Form</button>
+            <button type="button" class="btn-outline" onclick="clearForm()">Clear Form</button>
           </div>
-
         </form>
       </div>
-
       <div id="export-box" style="display:none" class="export-box">
         <h3>Recipe Saved!</h3>
         <p>Copy the code below and add it to the <code>recipes</code> array in <code>app.js</code> to make it permanent on the site.</p>
         <textarea id="export-code" rows="20" readonly></textarea>
-        <button class="btn-secondary" onclick="copyExport()">Copy to Clipboard</button>
+        <button class="btn-outline" onclick="copyExport()">Copy to Clipboard</button>
       </div>
-
     </div>
 
   </main>
 
   <footer>
-    <p>Churchill's Cookout &copy; 2026 &nbsp;|&nbsp; Made with 🔥</p>
+    <div class="footer-inner">
+      <div class="footer-logo" onclick="showView('home')">Churchill's Cookout</div>
+      <p class="footer-tagline">recipes &nbsp;•&nbsp; stories &nbsp;•&nbsp; flavor</p>
+      <div class="footer-links">
+        <button onclick="showView('home')">Home</button>
+        <button onclick="showView('recipes')">Recipes</button>
+        <button onclick="showView('categories')">Categories</button>
+        <button onclick="showView('about')">About</button>
+      </div>
+      <p class="footer-copy">&copy; 2026 Churchill's Cookout. Made with love.</p>
+    </div>
   </footer>
 
   <script src="app.js"></script>

@@ -98,6 +98,7 @@ function showView(name) {
   if (name === "home")       renderHome();
   if (name === "recipes")    renderRecipes();
   if (name === "categories") renderCategories();
+  if (name === "about")      {} // static content
 }
 
 function renderHome() {
@@ -388,6 +389,10 @@ function clearForm() {
   document.getElementById("export-box").style.display = "none";
   addIngredientRow(); addIngredientRow(); addIngredientRow();
   addStepRow(); addStepRow();
+}
+
+function toggleMobileNav() {
+  document.getElementById("mobile-nav").classList.toggle("open");
 }
 
 // ── Init ─────────────────────────────────────────────────────────────
