@@ -91,6 +91,7 @@ const RECIPES = [
   {
     id: 2,
     dietary: "meat",
+    image: "tandoori.jpg",
     title: "Tandoori Marinade",
     yield: "1 serving is roughly ~2 lbs of chicken",
     description: "A deeply spiced, yogurt-based marinade built for high heat. Authentic tandoori flavor with bloomed spices, ginger-garlic, and the unmistakable depth of kala namak.",
@@ -238,7 +239,7 @@ function renderHome() {
   const latestGrid = document.getElementById("home-latest");
   latestGrid.innerHTML = latest.map(r => `
     <div class="recipe-card" onclick="showDetail(${r.id || '"' + r._localId + '"'})">
-      <div class="card-thumb">${r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️"}</div>
+      <div class="card-thumb">${r.image ? `<img src="${r.image}" alt="${r.title}" style="width:100%;height:100%;object-fit:cover;display:block;" />` : (r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️")}</div>
       <div class="card-body">
         <div class="card-category">${CATEGORY_META[r.category]?.label || r.category}</div>
         <div class="card-title">${r.title}</div>
@@ -328,7 +329,7 @@ function renderRecipes(filterCategory) {
 
   grid.innerHTML = filtered.map(r => `
     <div class="recipe-card" onclick="showDetail(${r.id || '"' + r._localId + '"'})">
-      <div class="card-thumb">${r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️"}</div>
+      <div class="card-thumb">${r.image ? `<img src="${r.image}" alt="${r.title}" style="width:100%;height:100%;object-fit:cover;display:block;" />` : (r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️")}</div>
       <div class="card-body">
         <div class="card-category">${CATEGORY_META[r.category]?.label || r.category}</div>
         <div class="card-title">${r.title}</div>
@@ -405,6 +406,7 @@ function showDetail(id) {
   document.getElementById("recipe-detail").innerHTML = `
     <div class="rte-card">
 
+      ${recipe.image ? `<div class="rte-hero-img"><img src="${recipe.image}" alt="${recipe.title}" /></div>` : ""}
       <div class="rte-card-header">
         <div class="rte-card-title-row">
           <div class="rte-title-block">
