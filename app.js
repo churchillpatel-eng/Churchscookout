@@ -244,47 +244,78 @@ function showDetail(id) {
 
   const cat = CATEGORY_META[recipe.category];
 
-  const ingredientsHtml = recipe.ingredients.map(ing =>
-    `<li><span class="ing-amount">${ing.amount}</span>${ing.item}</li>`
-  ).join("");
+  const ingredientsHtml = recipe.ingredients.map((ing, i) => `
+    <li class="ing-item" onclick="this.classList.toggle('checked')">
+      <span class="ing-check">✓</span>
+      <span class="ing-amount">${ing.amount}</span>
+      <span class="ing-name">${ing.item}</span>
+    </li>
+  `).join("");
 
   const stepsHtml = recipe.steps.map((s, i) => `
     <li class="step-item">
       <div class="step-num">${i + 1}</div>
       <div class="step-text">
         ${s.text}
-        ${s.timer ? `<br><span class="step-timer">⏱ ${s.timer}</span>` : ""}
+        ${s.timer ? `<span class="step-timer">⏱ ${s.timer}</span>` : ""}
       </div>
     </li>
   `).join("");
 
   const notesHtml = recipe.notes ? `
-    <div class="notes-card">
-      <div class="section-title">Notes & Tips</div>
+    <div class="rte-notes">
+      <div class="rte-notes-title">Recipe Notes</div>
       <p>${recipe.notes}</p>
     </div>
   ` : "";
 
   document.getElementById("recipe-detail").innerHTML = `
-    <div class="detail-hero">
-      <div class="detail-emoji">${recipe.emoji || cat?.emoji || "🍽️"}</div>
-      <div>
-        <div class="detail-category-badge">${cat?.label || recipe.category}</div>
-        <h2>${recipe.title}</h2>
-        <p>${recipe.description}</p>
-        <div class="detail-servings">Makes <strong>${recipe.servings} servings</strong></div>
+    <div class="rte-card">
+
+      <div class="rte-card-header">
+        <div class="rte-card-title-row">
+          <div>
+            <div class="rte-category">${cat?.label || recipe.category}</div>
+            <h2 class="rte-title">${recipe.title}</h2>
+            <p class="rte-desc">${recipe.description}</p>
+          </div>
+          <button class="rte-print-btn" onclick="window.print()">🖨 Print</button>
+        </div>
+
+        <div class="rte-meta-bar">
+          <div class="rte-meta-item">
+            <span class="rte-meta-label">Servings</span>
+            <span class="rte-meta-value">${recipe.servings || "—"}</span>
+          </div>
+          <div class="rte-meta-item">
+            <span class="rte-meta-label">Ingredients</span>
+            <span class="rte-meta-value">${recipe.ingredients.length}</span>
+          </div>
+          <div class="rte-meta-item">
+            <span class="rte-meta-label">Steps</span>
+            <span class="rte-meta-value">${recipe.steps.length}</span>
+          </div>
+          <div class="rte-meta-item">
+            <span class="rte-meta-label">Category</span>
+            <span class="rte-meta-value">${cat?.emoji || ""} ${cat?.label || recipe.category}</span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="detail-body">
-      <div class="ingredients-card">
-        <div class="section-title">Ingredients</div>
-        <ul class="ingredients-list">${ingredientsHtml}</ul>
+
+      <div class="rte-body">
+        <div class="rte-ingredients-col">
+          <h3 class="rte-section-title">Ingredients</h3>
+          <p class="rte-ing-hint">Tap an ingredient to cross it off</p>
+          <ul class="rte-ingredients-list">${ingredientsHtml}</ul>
+        </div>
+
+        <div class="rte-steps-col">
+          <h3 class="rte-section-title">Instructions</h3>
+          <ol class="rte-steps-list">${stepsHtml}</ol>
+          ${notesHtml}
+        </div>
       </div>
-      <div class="steps-card">
-        <div class="section-title">Steps</div>
-        <ol class="steps-list">${stepsHtml}</ol>
-      </div>
-      ${notesHtml ? `<div style="grid-column:1/-1">${notesHtml}</div>` : ""}
+
     </div>
   `;
 
