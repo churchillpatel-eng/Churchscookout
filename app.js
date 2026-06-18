@@ -600,10 +600,29 @@ function changeServings(id, delta) {
   `).join("");
 }
 
+// Map Unicode fractions to decimal values
+const UNICODE_FRACTIONS = {
+  "½": 0.5, "¼": 0.25, "¾": 0.75,
+  "⅓": 1/3, "⅔": 2/3,
+  "⅛": 0.125, "⅜": 0.375, "⅝": 0.625, "⅞": 0.875,
+};
+
 function scaleAmount(amount, ratio) {
   if (ratio === 1) return amount;
-  // Match a leading number (integer or decimal or fraction like 1/4)
-  return amount.replace(/^(\d+\/\d+|\d+\.?\d*)/, match => {
+
+  // Replace leading unicode fraction (optionally preceded by a whole number)
+  // e.g. "½", "1 ½", "¼"
+  const unicodeFracPattern = /^(\d+\s)?([½¼¾⅓⅔⅛⅜⅝⅞])/;
+  const standardNumPattern = /^(\d+\/\d+|\d+\.?\d*)/;
+
+  if (unicodeFracPattern.test(amount)) {
+    return amount.replace(unicodeFracPattern, (match, whole, frac) => {
+      const num = (parseInt(whole) || 0) + (UNICODE_FRACTIONS[frac] || 0);
+      return formatNumber(num * ratio);
+    });
+  }
+
+  return amount.replace(standardNumPattern, match => {
     let num;
     if (match.includes("/")) {
       const [a, b] = match.split("/");
@@ -611,8 +630,7 @@ function scaleAmount(amount, ratio) {
     } else {
       num = parseFloat(match);
     }
-    const scaled = num * ratio;
-    return formatNumber(scaled);
+    return formatNumber(num * ratio);
   });
 }
 
