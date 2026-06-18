@@ -95,8 +95,40 @@ function showView(name) {
   document.getElementById("view-" + name).classList.add("active");
   document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
   currentView = name;
-  if (name === "recipes") renderRecipes();
+  if (name === "home")       renderHome();
+  if (name === "recipes")    renderRecipes();
   if (name === "categories") renderCategories();
+}
+
+function renderHome() {
+  // Latest recipes (up to 3)
+  const latest = allRecipes().slice(-3).reverse();
+  const latestGrid = document.getElementById("home-latest");
+  latestGrid.innerHTML = latest.map(r => `
+    <div class="recipe-card" onclick="showDetail(${r.id || '"' + r._localId + '"'})">
+      <div class="card-thumb">${r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️"}</div>
+      <div class="card-body">
+        <div class="card-category">${CATEGORY_META[r.category]?.label || r.category}</div>
+        <div class="card-title">${r.title}</div>
+        <div class="card-desc">${r.description}</div>
+        <div class="card-meta">
+          <span>🍽️ ${r.servings} servings</span>
+          <span>📋 ${r.ingredients.length} ingredients</span>
+        </div>
+      </div>
+    </div>
+  `).join("");
+
+  // Categories
+  const counts = {};
+  allRecipes().forEach(r => { counts[r.category] = (counts[r.category] || 0) + 1; });
+  document.getElementById("home-categories").innerHTML = Object.entries(counts).map(([cat, count]) => `
+    <div class="category-card" onclick="filterByCategory('${cat}')">
+      <div class="cat-icon">${CATEGORY_META[cat]?.emoji || "🍽️"}</div>
+      <div class="cat-name">${CATEGORY_META[cat]?.label || cat}</div>
+      <div class="cat-count">${count} recipe${count !== 1 ? "s" : ""}</div>
+    </div>
+  `).join("");
 }
 
 function showAdminGate() {
@@ -360,5 +392,5 @@ function clearForm() {
 
 // ── Init ─────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
-  renderRecipes();
+  renderHome();
 });

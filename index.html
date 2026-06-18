@@ -11,7 +11,7 @@
   <!-- HEADER -->
   <header>
     <div class="header-inner">
-      <div class="logo">
+      <div class="logo" onclick="showView('home')" style="cursor:pointer">
         <span class="flame">🔥</span>
         <div>
           <h1>Churchill's Cookout</h1>
@@ -19,7 +19,7 @@
         </div>
       </div>
       <nav>
-        <button class="nav-btn active" onclick="showView('recipes')">Recipes</button>
+        <button class="nav-btn" onclick="showView('recipes')">Recipes</button>
         <button class="nav-btn" onclick="showView('categories')">Categories</button>
         <button class="nav-btn admin-btn" onclick="showAdminGate()">🔒 Add Recipe</button>
       </nav>
@@ -28,6 +28,30 @@
 
   <!-- MAIN VIEWS -->
   <main>
+
+    <!-- HOME VIEW -->
+    <div id="view-home" class="view active">
+      <div class="home-hero">
+        <div class="home-hero-content">
+          <div class="home-flame">🔥</div>
+          <h2>Welcome to Churchill's Cookout</h2>
+          <p>A personal collection of recipes built for big flavor — from the grill, the griddle, and everything in between.</p>
+          <button class="btn-primary" onclick="showView('recipes')" style="font-size:1rem;padding:14px 32px;margin-top:8px">Browse Recipes</button>
+        </div>
+      </div>
+
+      <div class="home-sections">
+        <div class="home-section">
+          <h3>Latest Recipes</h3>
+          <div id="home-latest" class="recipe-grid"></div>
+        </div>
+
+        <div class="home-section">
+          <h3>Browse by Category</h3>
+          <div id="home-categories" class="categories-grid"></div>
+        </div>
+      </div>
+    </div>
 
     <!-- RECIPES VIEW -->
     <div id="view-recipes" class="view active">
