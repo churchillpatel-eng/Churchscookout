@@ -302,6 +302,20 @@ main { min-height: 80vh; }
   color: white;
 }
 
+.about-photo {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 560px) {
+  .about-photo { width: 160px; height: 160px; }
+}
+
 .about-eyebrow {
   font-size: 0.72rem;
   letter-spacing: 3px;
