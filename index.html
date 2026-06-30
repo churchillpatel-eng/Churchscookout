@@ -6,7 +6,12 @@
   <meta name="theme-color" content="#1a1a1a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>Church's Cookout</title>
+  <title>Church's Cookout — Indian-Inspired Recipes & Meal Planning</title>
+  <meta name="description" content="Church's Cookout: bold Indian-inspired recipes with a modern twist. Explore vegan, vegetarian, and meat dishes plus a weekly meal planner." />
+  <meta property="og:title" content="Church's Cookout" />
+  <meta property="og:description" content="Bold Indian-inspired recipes with a modern twist — vegan-friendly, always delicious." />
+  <meta property="og:image" content="hero.jpg" />
+  <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
@@ -16,7 +21,9 @@
 
   <!-- TOP BAR -->
   <div class="top-bar">
-    <span>Indian-inspired recipes with a modern twist</span>
+    <span>Indian-inspired recipes with a modern twist &nbsp;•&nbsp;
+      <a href="https://instagram.com/churchscookout" target="_blank" class="topbar-link">Follow on Instagram</a>
+    </span>
   </div>
 
   <!-- HEADER -->
@@ -29,7 +36,9 @@
       <button class="nav-btn" onclick="showView('home')">Home</button>
       <button class="nav-btn" onclick="showView('recipes')">Recipes</button>
       <button class="nav-btn" onclick="showView('categories')">Categories</button>
+      <button class="nav-btn" onclick="showView('meal-planner')">Meal Planner</button>
       <button class="nav-btn" onclick="showView('about')">About</button>
+      <button class="nav-btn" onclick="showView('work-with-me')">Work With Me</button>
       <button class="nav-btn admin-btn" onclick="showAdminGate()" style="display:none">🔒 Add Recipe</button>
     </nav>
     <button class="hamburger" onclick="toggleMobileNav()">☰</button>
@@ -37,7 +46,9 @@
       <button onclick="showView('home');toggleMobileNav()">Home</button>
       <button onclick="showView('recipes');toggleMobileNav()">Recipes</button>
       <button onclick="showView('categories');toggleMobileNav()">Categories</button>
+      <button onclick="showView('meal-planner');toggleMobileNav()">Meal Planner</button>
       <button onclick="showView('about');toggleMobileNav()">About</button>
+      <button onclick="showView('work-with-me');toggleMobileNav()">Work With Me</button>
       <button onclick="showAdminGate();toggleMobileNav()" style="display:none">🔒 Add Recipe</button>
     </nav>
   </header>
@@ -91,6 +102,44 @@
           <div id="home-categories" class="categories-grid"></div>
         </section>
 
+        <!-- NEWSLETTER SIGNUP -->
+        <section class="newsletter-section">
+          <div class="newsletter-inner">
+            <div class="newsletter-text">
+              <p class="newsletter-eyebrow">Free weekly recipes</p>
+              <h3>Join the Cookout</h3>
+              <p>Get one new recipe every week — plus tips, techniques, and the stories behind the food. No spam, ever.</p>
+            </div>
+            <form class="newsletter-form" onsubmit="handleNewsletterSignup(event)">
+              <input type="email" id="newsletter-email" placeholder="Your email address" required />
+              <button type="submit" class="btn-primary">Subscribe</button>
+            </form>
+            <p id="newsletter-success" class="newsletter-success" style="display:none">🎉 You're in! First recipe lands in your inbox this week.</p>
+          </div>
+        </section>
+
+        <!-- SOCIAL FOLLOW -->
+        <section class="social-follow-section">
+          <div class="section-header" style="justify-content:center;text-align:center;flex-direction:column;gap:8px">
+            <h2 class="section-title">Follow Along</h2>
+            <p style="color:var(--muted);font-size:0.88rem;font-weight:300">New recipes, techniques, and behind-the-scenes on social</p>
+          </div>
+          <div class="social-links">
+            <a href="https://instagram.com/churchscookout" target="_blank" class="social-link social-link--instagram">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              Instagram
+            </a>
+            <a href="https://tiktok.com/@churchscookout" target="_blank" class="social-link social-link--tiktok">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.77a4.85 4.85 0 0 1-1.01-.08z"/></svg>
+              TikTok
+            </a>
+            <a href="https://youtube.com/@churchscookout" target="_blank" class="social-link social-link--youtube">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+              YouTube
+            </a>
+          </div>
+        </section>
+
       </div>
     </div>
 
@@ -134,6 +183,86 @@
     <div id="view-detail" class="view">
       <button class="back-btn" onclick="showView('recipes')">← Back to Recipes</button>
       <div id="recipe-detail"></div>
+    </div>
+
+    <!-- MEAL PLANNER VIEW -->
+    <div id="view-meal-planner" class="view">
+      <div class="page-header">
+        <h2>Weekly Meal Planner</h2>
+        <p class="page-sub">Plan your week. Generate your shopping list.</p>
+      </div>
+      <div class="planner-container">
+        <div class="planner-grid-wrap">
+          <div class="planner-grid" id="planner-grid"></div>
+        </div>
+        <div class="planner-sidebar">
+          <div class="planner-actions">
+            <button class="btn-primary" onclick="generateShoppingList()" style="width:100%">🛒 Generate Shopping List</button>
+            <button class="btn-outline" onclick="clearPlan()" style="width:100%;margin-top:10px">Clear Plan</button>
+          </div>
+          <div id="shopping-list-output" class="shopping-list-output" style="display:none"></div>
+          <div class="planner-recipe-picker">
+            <h4>Your Recipes</h4>
+            <p class="planner-hint">Click a recipe to add it to a meal slot</p>
+            <div id="planner-recipe-list" class="planner-recipe-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORK WITH ME VIEW -->
+    <div id="view-work-with-me" class="view">
+      <div class="wwm-hero">
+        <p class="hero-eyebrow">Partner with Church's Cookout</p>
+        <h2>Work With Me</h2>
+        <p class="wwm-hero-sub">Authentic Indian-inspired food content for brands who want to reach a deeply engaged cooking audience.</p>
+      </div>
+      <div class="wwm-body">
+        <section class="wwm-section">
+          <h3>The Audience</h3>
+          <p>Church's Cookout speaks to home cooks who care about bold flavors, quality ingredients, and real technique. The audience skews toward food-curious millennials and the South Asian diaspora — people who cook seriously and buy the ingredients and tools to do it right.</p>
+          <div class="wwm-stats">
+            <div class="wwm-stat"><span class="stat-value">Indian-Inspired</span><span class="stat-label">Niche</span></div>
+            <div class="wwm-stat"><span class="stat-value">4%+</span><span class="stat-label">Engagement Rate</span></div>
+            <div class="wwm-stat"><span class="stat-value">Multi-Platform</span><span class="stat-label">Instagram · TikTok · YouTube</span></div>
+          </div>
+        </section>
+        <section class="wwm-section">
+          <h3>Content Formats</h3>
+          <div class="wwm-formats">
+            <div class="wwm-format-card">
+              <div class="wwm-format-icon">📱</div>
+              <h4>Short-Form Video</h4>
+              <p>Instagram Reels and TikTok videos (30–60 seconds). High reach, authentic integration of your product into a real recipe.</p>
+            </div>
+            <div class="wwm-format-card">
+              <div class="wwm-format-icon">🎬</div>
+              <h4>YouTube Integration</h4>
+              <p>Dedicated segment or organic mention in long-form recipe videos (8–15 min). Highest engagement and purchase intent.</p>
+            </div>
+            <div class="wwm-format-card">
+              <div class="wwm-format-icon">📧</div>
+              <h4>Newsletter Feature</h4>
+              <p>Sponsored mention in the weekly Church's Cookout email to a curated subscriber list of home cooking enthusiasts.</p>
+            </div>
+            <div class="wwm-format-card">
+              <div class="wwm-format-icon">🌐</div>
+              <h4>Recipe Integration</h4>
+              <p>Your product featured as a key ingredient in a dedicated recipe on churchscookout.com, with permanent SEO value.</p>
+            </div>
+          </div>
+        </section>
+        <section class="wwm-section">
+          <h3>Past & Current Partners</h3>
+          <p class="wwm-partners-placeholder">Sponsorship partnerships launching soon. Reach out to get in at the ground level — early partners receive preferred rates and priority placement.</p>
+        </section>
+        <section class="wwm-section wwm-contact-section">
+          <h3>Get in Touch</h3>
+          <p>Send me a message and I'll get back to you within 48 hours with a media kit and partnership options.</p>
+          <a href="mailto:churchill.patel@gmail.com?subject=Partnership%20Inquiry%20—%20Church's%20Cookout" class="btn-primary wwm-email-btn">📩 Email Me Directly</a>
+          <p class="wwm-contact-note">Or reach out on <a href="https://instagram.com/churchscookout" target="_blank" class="wwm-link">Instagram DM</a></p>
+        </section>
+      </div>
     </div>
 
     <!-- ADMIN GATE VIEW -->
@@ -230,11 +359,24 @@
     <div class="footer-inner">
       <div class="footer-logo" onclick="showView('home')">Church's Cookout</div>
       <p class="footer-tagline">recipes &nbsp;•&nbsp; stories &nbsp;•&nbsp; flavor</p>
+      <div class="footer-social">
+        <a href="https://instagram.com/churchscookout" target="_blank" class="footer-social-link" aria-label="Instagram">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="https://tiktok.com/@churchscookout" target="_blank" class="footer-social-link" aria-label="TikTok">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.77a4.85 4.85 0 0 1-1.01-.08z"/></svg>
+        </a>
+        <a href="https://youtube.com/@churchscookout" target="_blank" class="footer-social-link" aria-label="YouTube">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+        </a>
+      </div>
       <div class="footer-links">
         <button onclick="showView('home')">Home</button>
         <button onclick="showView('recipes')">Recipes</button>
         <button onclick="showView('categories')">Categories</button>
+        <button onclick="showView('meal-planner')">Meal Planner</button>
         <button onclick="showView('about')">About</button>
+        <button onclick="showView('work-with-me')">Work With Me</button>
       </div>
       <p class="footer-copy">&copy; 2026 Church's Cookout. Made with love.</p>
     </div>

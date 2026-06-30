@@ -227,10 +227,12 @@ function showView(name) {
   document.getElementById("view-" + name).classList.add("active");
   document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
   currentView = name;
-  if (name === "home")       renderHome();
-  if (name === "recipes")    renderRecipes();
-  if (name === "categories") renderCategories();
-  if (name === "about")      {} // static content
+  if (name === "home")          renderHome();
+  if (name === "recipes")       renderRecipes();
+  if (name === "categories")    renderCategories();
+  if (name === "meal-planner")  renderMealPlanner();
+  if (name === "about")         {} // static content
+  if (name === "work-with-me")  {} // static content
 }
 
 function renderHome() {
@@ -467,6 +469,30 @@ function showDetail(id) {
     </div>
   `;
 
+  // Inject JSON-LD recipe schema for SEO
+  const existingSchema = document.getElementById("recipe-schema");
+  if (existingSchema) existingSchema.remove();
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    "name": recipe.title,
+    "description": recipe.description,
+    "author": { "@type": "Person", "name": "Churchill" },
+    "recipeCategory": CATEGORY_META[recipe.category]?.label || recipe.category,
+    "recipeYield": recipe.servings ? `${recipe.servings} servings` : undefined,
+    "recipeIngredient": recipe.ingredients.map(i => `${i.amount} ${i.item}`),
+    "recipeInstructions": recipe.steps.map((s, idx) => ({
+      "@type": "HowToStep",
+      "position": idx + 1,
+      "text": s.text
+    })),
+  };
+  const scriptTag = document.createElement("script");
+  scriptTag.type = "application/ld+json";
+  scriptTag.id = "recipe-schema";
+  scriptTag.textContent = JSON.stringify(schema);
+  document.head.appendChild(scriptTag);
+
   showView("detail");
 }
 
@@ -650,6 +676,189 @@ function formatNumber(n) {
 
 function toggleMobileNav() {
   document.getElementById("mobile-nav").classList.toggle("open");
+}
+
+// ── Newsletter ───────────────────────────────────────────────────────
+function handleNewsletterSignup(e) {
+  e.preventDefault();
+  const email = document.getElementById("newsletter-email").value.trim();
+  if (!email) return;
+  // Store locally (in production, POST to your email service API here)
+  const subs = JSON.parse(localStorage.getItem("cc_subscribers") || "[]");
+  if (!subs.includes(email)) {
+    subs.push(email);
+    localStorage.setItem("cc_subscribers", JSON.stringify(subs));
+  }
+  document.getElementById("newsletter-email").value = "";
+  document.getElementById("newsletter-success").style.display = "block";
+  setTimeout(() => {
+    document.getElementById("newsletter-success").style.display = "none";
+  }, 5000);
+}
+
+// ── Meal Planner ─────────────────────────────────────────────────────
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const MEALS = ["Breakfast", "Lunch", "Dinner"];
+
+// planData[day][meal] = { recipeId, title } | null
+let planData = JSON.parse(localStorage.getItem("cc_meal_plan") || "{}");
+let pendingSlot = null; // { day, meal } waiting for recipe pick
+
+function savePlan() {
+  localStorage.setItem("cc_meal_plan", JSON.stringify(planData));
+}
+
+function renderMealPlanner() {
+  const grid = document.getElementById("planner-grid");
+
+  // Build grid HTML
+  let html = "";
+
+  // Header row: empty corner + days
+  html += `<div class="planner-cell header-cell"></div>`;
+  DAYS.forEach(d => {
+    html += `<div class="planner-cell header-cell">${d}</div>`;
+  });
+
+  // Meal rows
+  MEALS.forEach(meal => {
+    html += `<div class="planner-cell meal-label">${meal}</div>`;
+    DAYS.forEach(day => {
+      const entry = planData[day] && planData[day][meal];
+      if (entry) {
+        html += `
+          <div class="planner-cell meal-slot has-recipe" onclick="openSlotPicker('${day}','${meal}')">
+            <div class="planner-slot-content">
+              <span class="slot-recipe-name">${entry.emoji || "🍽️"} ${entry.title}</span>
+            </div>
+            <button class="planner-slot-remove" onclick="removeSlot(event,'${day}','${meal}')">✕</button>
+          </div>`;
+      } else {
+        html += `
+          <div class="planner-cell meal-slot" onclick="openSlotPicker('${day}','${meal}')">
+            <div class="planner-add-hint">+</div>
+          </div>`;
+      }
+    });
+  });
+
+  grid.innerHTML = html;
+
+  // Render recipe picker list
+  const list = document.getElementById("planner-recipe-list");
+  list.innerHTML = allRecipes().map(r => `
+    <div class="planner-recipe-item" onclick="pickRecipeForSlot('${r.id || r._localId}')">
+      <span>${r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️"}</span>
+      <span>${r.title}</span>
+    </div>
+  `).join("");
+}
+
+function openSlotPicker(day, meal) {
+  pendingSlot = { day, meal };
+  // Create overlay
+  const overlay = document.createElement("div");
+  overlay.className = "slot-picker-overlay";
+  overlay.id = "slot-picker-overlay";
+  overlay.onclick = (e) => { if (e.target === overlay) closeSlotPicker(); };
+
+  const recipes = allRecipes();
+  const items = recipes.map(r => `
+    <div class="slot-picker-item" onclick="pickRecipeFromModal('${r.id || r._localId}')">
+      <span>${r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️"}</span>
+      <span>${r.title}</span>
+    </div>
+  `).join("");
+
+  overlay.innerHTML = `
+    <div class="slot-picker-modal">
+      <h3>${day} — ${meal}</h3>
+      <p>Pick a recipe for this slot</p>
+      <div class="slot-picker-list">${items}</div>
+      <button class="slot-picker-cancel" onclick="closeSlotPicker()">Cancel</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function closeSlotPicker() {
+  const el = document.getElementById("slot-picker-overlay");
+  if (el) el.remove();
+  pendingSlot = null;
+}
+
+function pickRecipeFromModal(id) {
+  if (!pendingSlot) return;
+  pickRecipeForSlot(id);
+  closeSlotPicker();
+}
+
+function pickRecipeForSlot(id) {
+  if (!pendingSlot) return;
+  const recipe = allRecipes().find(r => r.id == id || r._localId == id);
+  if (!recipe) return;
+  const { day, meal } = pendingSlot;
+  if (!planData[day]) planData[day] = {};
+  planData[day][meal] = {
+    recipeId: id,
+    title: recipe.title,
+    emoji: recipe.emoji || CATEGORY_META[recipe.category]?.emoji || "🍽️",
+    ingredients: recipe.ingredients,
+  };
+  savePlan();
+  renderMealPlanner();
+  pendingSlot = null;
+}
+
+function removeSlot(e, day, meal) {
+  e.stopPropagation();
+  if (!planData[day]) return;
+  delete planData[day][meal];
+  savePlan();
+  renderMealPlanner();
+}
+
+function clearPlan() {
+  if (!confirm("Clear the entire meal plan?")) return;
+  planData = {};
+  savePlan();
+  renderMealPlanner();
+  document.getElementById("shopping-list-output").style.display = "none";
+}
+
+function generateShoppingList() {
+  // Collect all ingredients from planned recipes, group by recipe
+  const grouped = [];
+  MEALS.forEach(meal => {
+    DAYS.forEach(day => {
+      const entry = planData[day] && planData[day][meal];
+      if (entry && entry.ingredients) {
+        // Check if this recipe is already in grouped
+        const existing = grouped.find(g => g.recipeId === entry.recipeId);
+        if (!existing) {
+          grouped.push({ title: entry.title, emoji: entry.emoji, recipeId: entry.recipeId, ingredients: entry.ingredients });
+        }
+      }
+    });
+  });
+
+  if (grouped.length === 0) {
+    alert("Add some recipes to your plan first!");
+    return;
+  }
+
+  const output = document.getElementById("shopping-list-output");
+  let html = "<h4>🛒 Shopping List</h4><ul>";
+  grouped.forEach(group => {
+    html += `<li class="shopping-list-section-title">${group.emoji} ${group.title}</li>`;
+    group.ingredients.forEach(ing => {
+      html += `<li onclick="this.classList.toggle('checked-item')"><strong>${ing.amount}</strong> ${ing.item}</li>`;
+    });
+  });
+  html += "</ul>";
+  output.innerHTML = html;
+  output.style.display = "block";
+  output.scrollIntoView({ behavior: "smooth" });
 }
 
 // ── Init ─────────────────────────────────────────────────────────────
