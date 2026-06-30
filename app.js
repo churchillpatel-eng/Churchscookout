@@ -17,9 +17,10 @@ const CATEGORY_META = {
   sides:    { label: "Sides",              emoji: "🌽" },
   sauces:    { label: "Sauces & Marinades", emoji: "🫙" },
   marinades:  { label: "Marinades",          emoji: "🫙" },
-  barbeque:   { label: "Barbeque",           emoji: "🔥" },
-  desserts: { label: "Desserts",           emoji: "🍦" },
-  other:    { label: "Other",              emoji: "🍽️" },
+  barbeque:    { label: "Barbeque",    emoji: "🔥" },
+  appetizers:  { label: "Appetizers",  emoji: "🫕" },
+  desserts:    { label: "Desserts",    emoji: "🍦" },
+  other:       { label: "Other",       emoji: "🍽️" },
 };
 
 // ── Recipe Data ──────────────────────────────────────────────────────
@@ -210,6 +211,57 @@ const RECIPES = [
       },
     ],
     notes: "Scored paneer — the cross-hatch cuts let marinade soak deep into each cube, not just the surface.\n\nSmoked mustard oil — heating it to smoking point removes the harsh raw edge and adds a complex, nutty depth regular oil can't touch.\n\nBlack cardamom — adds a camphor-like smokiness that amplifies the tandoor char.\n\nBlack salt (kala namak) — its sulphurous, tangy punch adds a totally different flavour dimension to regular salt.\n\nAmchur — raw mango powder gives a fruity tartness that cuts through the richness.\n\nDouble butter baste — melt more butter at the finish if you want it extra indulgent.\n\nServe with mint-coriander chutney, pickled onions, and green chili on the side."
+  },
+  {
+    id: 4,
+    dietary: "meat",
+    title: "Buffalo Chicken Dip",
+    description: "Bold, tangy buffalo flavor you love — with cream cheese and mayo still in the mix, just made lighter. ~120 calories per serving.",
+    servings: 8,
+    category: "appetizers",
+    emoji: "🫕",
+    ingredients: [
+      { amount: "16 oz",   item: "ground chicken thighs" },
+      { amount: "8 oz",    item: "reduced-fat cream cheese, softened" },
+      { amount: "½ cup",   item: "cottage cheese" },
+      { amount: "3 tbsp",  item: "light mayo" },
+      { amount: "1 cup",   item: "Frank's RedHot sauce (or similar)" },
+      { amount: "½ cup",   item: "reduced-fat shredded cheddar" },
+      { amount: "½ tsp",   item: "garlic powder" },
+      { amount: "¼ tsp",   item: "onion powder" },
+      { amount: "2",       item: "green onions, sliced (for topping)" },
+    ],
+    steps: [
+      {
+        text: "Cook the chicken: Brown ground chicken thighs in a skillet over medium-high heat, breaking it up as it cooks, until fully cooked through. Drain any excess liquid and let cool slightly, then shred or leave crumbled.",
+        timer: null
+      },
+      {
+        text: "Preheat oven: Preheat your oven to 375°F. Lightly spray an 8x8 baking dish or similar oven-safe dish with nonstick spray.",
+        timer: null
+      },
+      {
+        text: "Mix the base: In a large bowl, beat the cream cheese until smooth. Stir in cottage cheese and light mayo until fully combined. The cottage cheese replaces a big chunk of the cream cheese and sour cream without sacrificing richness.",
+        timer: null
+      },
+      {
+        text: "Add flavor: Stir in hot sauce, garlic powder, and onion powder. Taste and adjust heat to your liking.",
+        timer: null
+      },
+      {
+        text: "Fold in chicken: Fold in the cooked chicken until evenly coated. Spread mixture into the prepared baking dish.",
+        timer: null
+      },
+      {
+        text: "Top and bake: Sprinkle shredded cheddar evenly over the top. Bake for 20–25 minutes until bubbly and the cheese is lightly golden.",
+        timer: "20–25 min"
+      },
+      {
+        text: "Garnish and serve: Top with sliced green onions and serve hot with celery sticks, cucumber rounds, bell pepper strips, or light tortilla chips.",
+        timer: null
+      },
+    ],
+    notes: "Saves ~100 cal/serving vs. traditional by using reduced-fat cream cheese, light mayo in a smaller amount, and cottage cheese instead of sour cream.\n\nCottage cheese keeps the dip thick and creamy while adding extra protein.\n\nBest dippers for staying calorie-friendly: celery, cucumber, bell pepper. Light tortilla chips add ~60–70 cal per small handful.\n\nMake it ahead: assemble the night before, refrigerate, and bake when ready."
   },
 ];
 
