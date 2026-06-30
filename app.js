@@ -36,7 +36,7 @@ const RECIPES = [
     category: "burgers",
     emoji: "🍔",
     ingredients: [
-      { amount: "1 lb",      item: "boneless skinless chicken thighs" },
+      { amount: "1 lb",      item: "Chicken thighs" },
       { amount: "1 stalk",   item: "green garlic (white and light green parts), finely minced" },
       { amount: "2.5 tbsp",  item: "shallot, finely minced" },
       { amount: "2 tbsp",    item: "fresh mint leaves, finely chopped" },
