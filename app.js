@@ -887,35 +887,71 @@ function clearPlan() {
 }
 
 function generateShoppingList() {
-  // Collect all ingredients from planned recipes, group by recipe
-  const grouped = [];
+  // Collect all ingredients from all planned recipes
+  const allIngredients = [];
   MEALS.forEach(meal => {
     DAYS.forEach(day => {
       const entry = planData[day] && planData[day][meal];
       if (entry && entry.ingredients) {
-        // Check if this recipe is already in grouped
-        const existing = grouped.find(g => g.recipeId === entry.recipeId);
-        if (!existing) {
-          grouped.push({ title: entry.title, emoji: entry.emoji, recipeId: entry.recipeId, ingredients: entry.ingredients });
-        }
+        entry.ingredients.forEach(ing => {
+          if (!ing.section) allIngredients.push(ing);
+        });
       }
     });
   });
 
-  if (grouped.length === 0) {
+  if (allIngredients.length === 0) {
     alert("Add some recipes to your plan first!");
     return;
   }
 
-  const output = document.getElementById("shopping-list-output");
-  let html = "<h4>🛒 Shopping List</h4><ul>";
-  grouped.forEach(group => {
-    html += `<li class="shopping-list-section-title">${group.emoji} ${group.title}</li>`;
-    group.ingredients.forEach(ing => {
-      html += `<li onclick="this.classList.toggle('checked-item')"><strong>${ing.amount}</strong> ${ing.item}</li>`;
-    });
+  // Deduplicate by ingredient name (case-insensitive)
+  const seen = new Map();
+  allIngredients.forEach(ing => {
+    const key = ing.item.toLowerCase().trim();
+    if (!seen.has(key)) seen.set(key, { amount: ing.amount, item: ing.item });
   });
-  html += "</ul>";
+  const deduped = Array.from(seen.values());
+
+  // Aisle groups — checked in order, first match wins
+  const AISLES = [
+    { label: "Produce",              emoji: "🥬", keywords: ["green onion", "green garlic", "shallot", "onion", "garlic", "ginger", "lime", "lemon", "cilantro", "mint", "celery", "cucumber", "bell pepper", "jalapeño", "pepper", "tomato", "lettuce", "herb", "scallion"] },
+    { label: "Meat & Seafood",       emoji: "🥩", keywords: ["chicken", "beef", "lamb", "pork", "shrimp", "fish", "seafood", "paneer"] },
+    { label: "Dairy & Eggs",         emoji: "🧀", keywords: ["cream cheese", "cottage cheese", "cheddar", "cheese", "yogurt", "egg", "butter", "sour cream", "milk"] },
+    { label: "Condiments & Sauces",  emoji: "🫙", keywords: ["hot sauce", "frank", "mayo", "mustard oil", "soy sauce", "ketchup", "vinegar", "oil"] },
+    { label: "Spices & Seasonings",  emoji: "🌶️", keywords: ["salt", "pepper", "paprika", "cumin", "coriander", "turmeric", "garam masala", "chili", "garlic powder", "onion powder", "ajwain", "chaat masala", "kala namak", "amchur", "cardamom", "masala", "red pepper", "cayenne", "seasoning"] },
+    { label: "Pantry",               emoji: "🛒", keywords: ["panko", "breadcrumb", "flour", "sugar", "broth", "stock"] },
+  ];
+
+  // Group by aisle
+  const groups = AISLES.map(a => ({ ...a, items: [] }));
+  const other = { label: "Other", emoji: "🍽️", items: [] };
+
+  deduped.forEach(ing => {
+    const nameLower = ing.item.toLowerCase();
+    let matched = false;
+    for (const group of groups) {
+      if (group.keywords.some(kw => nameLower.includes(kw))) {
+        group.items.push(ing);
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) other.items.push(ing);
+  });
+
+  // Build HTML
+  let html = "<h4>🛒 Shopping List</h4>";
+  [...groups, other].forEach(group => {
+    if (group.items.length === 0) return;
+    html += `<div class="shopping-aisle-header">${group.emoji} ${group.label}</div><ul class="shopping-aisle-list">`;
+    group.items.forEach(ing => {
+      html += `<li onclick="this.classList.toggle('checked-item')">${ing.amount ? `<strong>${ing.amount}</strong> ` : ""}${ing.item}</li>`;
+    });
+    html += "</ul>";
+  });
+
+  const output = document.getElementById("shopping-list-output");
   output.innerHTML = html;
   output.style.display = "block";
   output.scrollIntoView({ behavior: "smooth" });
