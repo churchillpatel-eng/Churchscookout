@@ -221,19 +221,19 @@ const RECIPES = [
     category: "appetizers",
     emoji: "🫕",
     ingredients: [
-      { amount: "16 oz",   item: "ground chicken thighs" },
-      { amount: "8 oz",    item: "reduced-fat cream cheese, softened" },
-      { amount: "½ cup",   item: "cottage cheese" },
-      { amount: "3 tbsp",  item: "light mayo" },
-      { amount: "1 cup",   item: "Frank's RedHot sauce (or similar)" },
-      { amount: "½ cup",   item: "reduced-fat shredded cheddar" },
-      { amount: "½ tsp",   item: "garlic powder" },
-      { amount: "¼ tsp",   item: "onion powder" },
-      { amount: "2",       item: "green onions, sliced (for topping)" },
+      { amount: "16 oz",   item: "Chicken thighs" },
+      { amount: "8 oz",    item: "Reduced-fat cream cheese, softened" },
+      { amount: "½ cup",   item: "Cottage cheese" },
+      { amount: "3 tbsp",  item: "Light mayo" },
+      { amount: "1 cup",   item: "Frank's Red Hot sauce (or similar)" },
+      { amount: "½ cup",   item: "Reduced-fat shredded cheddar" },
+      { amount: "½ tsp",   item: "Garlic powder" },
+      { amount: "¼ tsp",   item: "Onion powder" },
+      { amount: "2",       item: "Green onions, sliced (for topping)" },
     ],
     steps: [
       {
-        text: "Cook the chicken: Brown ground chicken thighs in a skillet over medium-high heat, breaking it up as it cooks, until fully cooked through. Drain any excess liquid and let cool slightly, then shred or leave crumbled.",
+        text: "Grind and cook the chicken: Grind the chicken thighs with a meat grinder. Brown ground chicken in a skillet over medium-high heat, breaking it up as it cooks, until fully cooked through. Drain any excess liquid and let cool slightly.",
         timer: null
       },
       {
@@ -261,7 +261,7 @@ const RECIPES = [
         timer: null
       },
     ],
-    notes: "Saves ~100 cal/serving vs. traditional by using reduced-fat cream cheese, light mayo in a smaller amount, and cottage cheese instead of sour cream.\n\nCottage cheese keeps the dip thick and creamy while adding extra protein.\n\nBest dippers for staying calorie-friendly: celery, cucumber, bell pepper. Light tortilla chips add ~60–70 cal per small handful.\n\nMake it ahead: assemble the night before, refrigerate, and bake when ready."
+    notes: "Saves ~100 cal/serving vs. traditional by using reduced-fat cream cheese, light mayo in a smaller amount, and cottage cheese instead of sour cream.\n\nCottage cheese keeps the dip thick and creamy while adding extra protein.\n\nBest dippers for staying calorie-friendly: Celery, cucumber, bell pepper. Light tortilla chips add ~60–70 cal per small handful.\n\nMake it ahead: Assemble the night before, refrigerate, and bake when ready."
   },
 ];
 
