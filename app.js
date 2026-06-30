@@ -239,7 +239,7 @@ const RECIPES = [
     ],
     steps: [
       {
-        text: "Grind and cook the chicken: Grind the chicken thighs with a meat grinder. Brown ground chicken in a skillet over medium-high heat, breaking it up as it cooks, until fully cooked through. Drain any excess liquid and let cool slightly.",
+        text: "Grind and cook the chicken: Grind the chicken thighs with a meat grinder. Season generously with salt, paprika, garlic powder, onion powder, and black pepper. Brown the seasoned ground chicken in a skillet over medium-high heat, breaking it up as it cooks, until fully cooked through. Drain any excess liquid and let cool slightly.",
         timer: null
       },
       {
