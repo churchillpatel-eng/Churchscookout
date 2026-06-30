@@ -38,7 +38,7 @@
       <button class="nav-btn" onclick="showView('categories')">Categories</button>
       <button class="nav-btn" onclick="showView('meal-planner')">Meal Planner</button>
       <button class="nav-btn" onclick="showView('about')">About</button>
-      <button class="nav-btn" onclick="showView('work-with-me')">Work With Me</button>
+      <button class="nav-btn" onclick="showView('work-with-me')" style="display:none">Work With Me</button>
       <button class="nav-btn admin-btn" onclick="showAdminGate()" style="display:none">🔒 Add Recipe</button>
     </nav>
     <button class="hamburger" onclick="toggleMobileNav()">☰</button>
@@ -48,7 +48,7 @@
       <button onclick="showView('categories');toggleMobileNav()">Categories</button>
       <button onclick="showView('meal-planner');toggleMobileNav()">Meal Planner</button>
       <button onclick="showView('about');toggleMobileNav()">About</button>
-      <button onclick="showView('work-with-me');toggleMobileNav()">Work With Me</button>
+      <button onclick="showView('work-with-me');toggleMobileNav()" style="display:none">Work With Me</button>
       <button onclick="showAdminGate();toggleMobileNav()" style="display:none">🔒 Add Recipe</button>
     </nav>
   </header>
@@ -376,7 +376,7 @@
         <button onclick="showView('categories')">Categories</button>
         <button onclick="showView('meal-planner')">Meal Planner</button>
         <button onclick="showView('about')">About</button>
-        <button onclick="showView('work-with-me')">Work With Me</button>
+        <button onclick="showView('work-with-me')" style="display:none">Work With Me</button>
       </div>
       <p class="footer-copy">&copy; 2026 Church's Cookout. Made with love.</p>
     </div>
