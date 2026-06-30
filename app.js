@@ -230,6 +230,12 @@ const RECIPES = [
       { amount: "½ tsp",   item: "Garlic powder" },
       { amount: "¼ tsp",   item: "Onion powder" },
       { amount: "2",       item: "Green onions, sliced (for topping)" },
+      { section: "Chicken Seasoning" },
+      { amount: "",        item: "Salt" },
+      { amount: "",        item: "Paprika" },
+      { amount: "",        item: "Garlic powder" },
+      { amount: "",        item: "Onion powder" },
+      { amount: "",        item: "Black pepper, to taste" },
     ],
     steps: [
       {
@@ -300,7 +306,7 @@ function renderHome() {
         <div class="card-desc">${r.description}</div>
         <div class="card-meta">
           <span>🍽️ ${r.servings} servings</span>
-          <span>📋 ${r.ingredients.length} ingredients</span>
+          <span>📋 ${r.ingredients.filter(i => !i.section).length} ingredients</span>
         </div>
         ${r.dietary ? `<div class="card-dietary card-dietary--${r.dietary}">${DIETARY_META[r.dietary]?.emoji} ${DIETARY_META[r.dietary]?.label}</div>` : ""}
       </div>
@@ -390,7 +396,7 @@ function renderRecipes(filterCategory) {
         <div class="card-desc">${r.description}</div>
         <div class="card-meta">
           <span>🍽️ ${r.servings} servings</span>
-          <span>📋 ${r.ingredients.length} ingredients</span>
+          <span>📋 ${r.ingredients.filter(i => !i.section).length} ingredients</span>
         </div>
         ${r.dietary ? `<div class="card-dietary card-dietary--${r.dietary}">${DIETARY_META[r.dietary]?.emoji} ${DIETARY_META[r.dietary]?.label}</div>` : ""}
       </div>
@@ -432,13 +438,15 @@ function showDetail(id) {
 
   const cat = CATEGORY_META[recipe.category];
 
-  const ingredientsHtml = recipe.ingredients.map((ing, i) => `
+  const ingredientsHtml = recipe.ingredients.map((ing, i) => {
+    if (ing.section) return `<li class="ing-section-header">${ing.section}</li>`;
+    return `
     <li class="ing-item" onclick="this.classList.toggle('checked')">
       <span class="ing-check">✓</span>
       <span class="ing-amount">${ing.amount}</span>
       <span class="ing-name">${ing.item}</span>
-    </li>
-  `).join("");
+    </li>`;
+  }).join("");
 
   const stepsHtml = recipe.steps.map((s, i) => `
     <li class="step-item">
@@ -479,7 +487,7 @@ function showDetail(id) {
           </div>
           <div class="rte-meta-item">
             <span class="rte-meta-label">Ingredients</span>
-            <span class="rte-meta-value">${recipe.ingredients.length}</span>
+            <span class="rte-meta-value">${recipe.ingredients.filter(i => !i.section).length}</span>
           </div>
           <div class="rte-meta-item">
             <span class="rte-meta-label">Steps</span>
