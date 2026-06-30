@@ -349,6 +349,16 @@ main { min-height: 80vh; }
   border-bottom: 1px solid var(--border);
 }
 
+.about-photo-lg {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 20%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  display: inline-block;
+}
+
 .about-monogram-lg {
   width: 140px;
   height: 140px;
