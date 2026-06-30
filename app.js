@@ -235,7 +235,7 @@ const RECIPES = [
       { amount: "",        item: "Paprika" },
       { amount: "",        item: "Garlic powder" },
       { amount: "",        item: "Onion powder" },
-      { amount: "",        item: "Black pepper, to taste" },
+      { amount: "",        item: "Black pepper" },
     ],
     steps: [
       {
