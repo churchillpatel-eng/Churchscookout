@@ -51,6 +51,7 @@ const RECIPES = [
       { amount: "¼ tsp",     item: "Cumin Powder" },
       { amount: "¼ tsp",     item: "Coriander Powder" },
       { amount: "⅛ tsp",     item: "Crushed Red Pepper Flakes" },
+      { amount: "1 tsp",     item: "Paprika" },
       { amount: "½ tbsp",    item: "Neutral Oil (Grapeseed or Avocado)" },
     ],
     steps: [
