@@ -1,0 +1,34 @@
+<svg width="240" height="440" viewBox="218 58 244 442" xmlns="http://www.w3.org/2000/svg">
+
+  <circle cx="340" cy="180" r="108" fill="none" stroke="#c8703a" stroke-width="2.5"/>
+  <circle cx="340" cy="180" r="91" fill="none" stroke="#c8703a" stroke-width="0.6"/>
+
+  <polygon points="340,68 344,72 340,76 336,72" fill="#c8703a"/>
+  <polygon points="448,176 452,180 448,184 444,180" fill="#c8703a"/>
+  <polygon points="340,284 344,288 340,292 336,288" fill="#c8703a"/>
+  <polygon points="232,176 236,180 232,184 228,180" fill="#c8703a"/>
+
+  <path d="M 308 228 C 308 252 318 260 340 262 C 362 260 372 252 372 228 Z" fill="#c8703a"/>
+  <line x1="308" y1="229" x2="372" y2="229" stroke="#1a1a1a" stroke-width="1" stroke-opacity="0.12"/>
+  <line x1="321" y1="226" x2="321" y2="233" stroke="#1a1a1a" stroke-width="1.2" stroke-opacity="0.15"/>
+  <line x1="332" y1="226" x2="332" y2="233" stroke="#1a1a1a" stroke-width="1.2" stroke-opacity="0.15"/>
+  <line x1="348" y1="226" x2="348" y2="233" stroke="#1a1a1a" stroke-width="1.2" stroke-opacity="0.15"/>
+  <line x1="359" y1="226" x2="359" y2="233" stroke="#1a1a1a" stroke-width="1.2" stroke-opacity="0.15"/>
+  <line x1="315" y1="258" x2="311" y2="270" stroke="#c8703a" stroke-width="3" stroke-linecap="round"/>
+  <line x1="365" y1="258" x2="369" y2="270" stroke="#c8703a" stroke-width="3" stroke-linecap="round"/>
+
+  <path d="M 309 228 C 297 218 295 200 302 188 C 304 183 311 184 313 190 C 316 202 316 218 309 228 Z" fill="#c8703a" opacity="0.52"/>
+  <path d="M 323 226 C 311 215 311 183 318 162 C 320 156 325 158 326 164 C 329 183 330 213 323 226 Z" fill="#c8703a" opacity="0.8"/>
+  <path d="M 340 224 C 324 208 322 162 337 118 C 338 113 342 113 343 118 C 358 162 356 208 340 224 Z" fill="#c8703a"/>
+  <path d="M 357 226 C 350 213 351 183 354 164 C 355 158 360 156 362 162 C 369 183 369 213 357 226 Z" fill="#c8703a" opacity="0.8"/>
+  <path d="M 371 228 C 364 218 364 202 367 190 C 369 184 376 183 378 188 C 385 200 383 218 371 228 Z" fill="#c8703a" opacity="0.52"/>
+
+  <line x1="262" y1="332" x2="316" y2="332" stroke="#c8703a" stroke-width="1"/>
+  <polygon points="340,326 345,332 340,338 335,332" fill="#c8703a"/>
+  <line x1="364" y1="332" x2="418" y2="332" stroke="#c8703a" stroke-width="1"/>
+
+  <text x="340" y="392" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-size="52" font-weight="700" fill="#1a1a1a">Church's</text>
+  <text x="340" y="454" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-size="52" font-weight="700" fill="#c8703a">Cookout</text>
+  <text x="340" y="484" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-style="italic" letter-spacing="2" fill="#888">recipes  •  stories  •  flavor</text>
+
+</svg>

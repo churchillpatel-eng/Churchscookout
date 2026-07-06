@@ -6,11 +6,18 @@ vegan-friendly. The site is the hub of an audience → sponsorship business
 schedule in VIDEO_CONTENT_CALENDAR.md.
 
 ## Stack & layout
-- Static single-page site, vanilla HTML/CSS/JS — no framework, no build step.
-  Views toggle via `showView()` in app.js.
-- All recipe data is the `RECIPES` array in app.js. New permanent recipes get
-  pasted there (the admin panel export produces the object).
-- Local preview: `npx serve -l 4321 .`
+Two codebases live here during the migration:
+- **`web/` — the production app (Next.js, App Router, TypeScript).** Each recipe
+  is an SSG page with Recipe JSON-LD. Recipe data is the `RECIPES` array in
+  `web/src/data/recipes.ts`; `/admin` builds an object to paste there. Domain
+  logic (scaling, shopping list) lives framework-free in `web/src/lib/`. The
+  ported design system is `web/src/app/legacy.css` (don't restyle it there).
+  Run: `cd web && npm install && npm run dev`. See `web/README.md`.
+- **root (legacy) — the original static single-page site** (vanilla HTML/CSS/JS,
+  `index.html` + `app.js`, views toggle via `showView()`). Still live until the
+  Next.js app is deployed and cut over. Preview: `npx serve -l 4321 .`.
+
+Design system, voice, and recipe-data conventions below apply to BOTH.
 
 ## Done = live
 A finished change is committed AND pushed to `origin master` — that publishes

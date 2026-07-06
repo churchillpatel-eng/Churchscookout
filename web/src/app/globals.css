@@ -1,0 +1,24 @@
+/* ── App-level overrides on top of the ported design system (legacy.css) ──
+   Navigation and cards used to be <button>/<div onclick> elements; in the
+   Next app they are <Link> anchors. Reset anchor styling so they look
+   exactly as before. */
+
+.recipe-card,
+.category-card,
+.header-logo,
+.footer-logo,
+.nav-btn,
+.mobile-nav a,
+.footer-links a,
+.section-link,
+.back-btn {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The recipes/categories grids were targeted by #id in legacy.css; the
+   home grids reuse the same classes. Both keep their original ids. */
+.recipe-grid,
+.categories-grid {
+  list-style: none;
+}
