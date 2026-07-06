@@ -1,6 +1,26 @@
-// ── Admin Password ──────────────────────────────────────────────────
-// Change this to your own password before deploying
-const ADMIN_PASSWORD = "Cookout2026!";
+// ── Helpers ─────────────────────────────────────────────────────────
+// Escape any value that gets interpolated into innerHTML. Recipe data
+// (titles, descriptions, ingredients, notes) is rendered as HTML, so it
+// must be escaped to avoid breaking layout — or worse, injecting markup.
+function escapeHtml(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Safely read a JSON value from localStorage. A single corrupt key would
+// otherwise throw at module load and blank the entire site.
+function readStore(key, fallback) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || fallback);
+  } catch {
+    console.warn(`Ignoring corrupt localStorage key "${key}"`);
+    return JSON.parse(fallback);
+  }
+}
 
 // ── Category Config ─────────────────────────────────────────────────
 const DIETARY_META = {
@@ -274,10 +294,33 @@ const RECIPES = [
 
 // ── State ────────────────────────────────────────────────────────────
 let currentView = "recipes";
-let localRecipes = JSON.parse(localStorage.getItem("cc_local_recipes") || "[]");
+let localRecipes = readStore("cc_local_recipes", "[]");
 
 function allRecipes() {
   return [...RECIPES, ...localRecipes];
+}
+
+// Shared recipe-card markup used by both the home and recipes grids.
+function recipeCardHtml(r) {
+  const clickId = r.id || `"${r._localId}"`;
+  const thumb = r.image
+    ? `<img src="${escapeHtml(r.image)}" alt="${escapeHtml(r.title)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />`
+    : (r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️");
+  return `
+    <div class="recipe-card" onclick="showDetail(${clickId})">
+      <div class="card-thumb">${thumb}</div>
+      <div class="card-body">
+        <div class="card-category">${escapeHtml(CATEGORY_META[r.category]?.label || r.category)}</div>
+        <div class="card-title">${escapeHtml(r.title)}</div>
+        <div class="card-desc">${escapeHtml(r.description)}</div>
+        <div class="card-meta">
+          <span>🍽️ ${escapeHtml(r.servings)} servings</span>
+          <span>📋 ${r.ingredients.filter(i => !i.section).length} ingredients</span>
+        </div>
+        ${r.dietary ? `<div class="card-dietary card-dietary--${escapeHtml(r.dietary)}">${DIETARY_META[r.dietary]?.emoji || ""} ${escapeHtml(DIETARY_META[r.dietary]?.label || "")}</div>` : ""}
+      </div>
+    </div>
+  `;
 }
 
 // ── Navigation ───────────────────────────────────────────────────────
@@ -298,21 +341,7 @@ function renderHome() {
   // Latest recipes (up to 3)
   const latest = allRecipes().slice(-3).reverse();
   const latestGrid = document.getElementById("home-latest");
-  latestGrid.innerHTML = latest.map(r => `
-    <div class="recipe-card" onclick="showDetail(${r.id || '"' + r._localId + '"'})">
-      <div class="card-thumb">${r.image ? `<img src="${r.image}" alt="${r.title}" style="width:100%;height:100%;object-fit:cover;display:block;" />` : (r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️")}</div>
-      <div class="card-body">
-        <div class="card-category">${CATEGORY_META[r.category]?.label || r.category}</div>
-        <div class="card-title">${r.title}</div>
-        <div class="card-desc">${r.description}</div>
-        <div class="card-meta">
-          <span>🍽️ ${r.servings} servings</span>
-          <span>📋 ${r.ingredients.filter(i => !i.section).length} ingredients</span>
-        </div>
-        ${r.dietary ? `<div class="card-dietary card-dietary--${r.dietary}">${DIETARY_META[r.dietary]?.emoji} ${DIETARY_META[r.dietary]?.label}</div>` : ""}
-      </div>
-    </div>
-  `).join("");
+  latestGrid.innerHTML = latest.map(recipeCardHtml).join("");
 
   // Categories
   const counts = {};
@@ -326,31 +355,18 @@ function renderHome() {
   `).join("");
 }
 
-function showAdminGate() {
+// The admin panel only generates copy-paste export code — it writes nothing
+// to a server — so a client-side password gate added no real protection.
+// It's opened directly; the nav entry stays hidden (display:none) by default.
+function showAdmin() {
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.getElementById("view-admin-gate").classList.add("active");
-  document.getElementById("admin-password").value = "";
-  document.getElementById("password-error").style.display = "none";
-  setTimeout(() => document.getElementById("admin-password").focus(), 100);
-}
-
-function checkPassword() {
-  const val = document.getElementById("admin-password").value;
-  if (val === ADMIN_PASSWORD) {
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    document.getElementById("view-admin").classList.add("active");
-    document.getElementById("export-box").style.display = "none";
-    if (document.querySelectorAll(".ingredient-row").length === 0) {
-      addIngredientRow(); addIngredientRow(); addIngredientRow();
-    }
-    if (document.querySelectorAll(".step-row").length === 0) {
-      addStepRow(); addStepRow();
-    }
-  } else {
-    const err = document.getElementById("password-error");
-    err.style.display = "block";
-    document.getElementById("admin-password").value = "";
-    document.getElementById("admin-password").focus();
+  document.getElementById("view-admin").classList.add("active");
+  document.getElementById("export-box").style.display = "none";
+  if (document.querySelectorAll(".ingredient-row").length === 0) {
+    addIngredientRow(); addIngredientRow(); addIngredientRow();
+  }
+  if (document.querySelectorAll(".step-row").length === 0) {
+    addStepRow(); addStepRow();
   }
 }
 
@@ -388,21 +404,7 @@ function renderRecipes(filterCategory) {
     return;
   }
 
-  grid.innerHTML = filtered.map(r => `
-    <div class="recipe-card" onclick="showDetail(${r.id || '"' + r._localId + '"'})">
-      <div class="card-thumb">${r.image ? `<img src="${r.image}" alt="${r.title}" style="width:100%;height:100%;object-fit:cover;display:block;" />` : (r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️")}</div>
-      <div class="card-body">
-        <div class="card-category">${CATEGORY_META[r.category]?.label || r.category}</div>
-        <div class="card-title">${r.title}</div>
-        <div class="card-desc">${r.description}</div>
-        <div class="card-meta">
-          <span>🍽️ ${r.servings} servings</span>
-          <span>📋 ${r.ingredients.filter(i => !i.section).length} ingredients</span>
-        </div>
-        ${r.dietary ? `<div class="card-dietary card-dietary--${r.dietary}">${DIETARY_META[r.dietary]?.emoji} ${DIETARY_META[r.dietary]?.label}</div>` : ""}
-      </div>
-    </div>
-  `).join("");
+  grid.innerHTML = filtered.map(recipeCardHtml).join("");
 }
 
 // ── Render Categories ────────────────────────────────────────────────
@@ -440,12 +442,12 @@ function showDetail(id) {
   const cat = CATEGORY_META[recipe.category];
 
   const ingredientsHtml = recipe.ingredients.map((ing, i) => {
-    if (ing.section) return `<li class="ing-section-header">${ing.section}</li>`;
+    if (ing.section) return `<li class="ing-section-header">${escapeHtml(ing.section)}</li>`;
     return `
     <li class="ing-item" onclick="this.classList.toggle('checked')">
       <span class="ing-check">✓</span>
-      <span class="ing-amount">${ing.amount}</span>
-      <span class="ing-name">${ing.item}</span>
+      <span class="ing-amount">${escapeHtml(ing.amount)}</span>
+      <span class="ing-name">${escapeHtml(ing.item)}</span>
     </li>`;
   }).join("");
 
@@ -453,8 +455,8 @@ function showDetail(id) {
     <li class="step-item">
       <div class="step-num">${i + 1}</div>
       <div class="step-text">
-        ${s.text}
-        ${s.timer ? `<span class="step-timer">⏱ ${s.timer}</span>` : ""}
+        ${escapeHtml(s.text)}
+        ${s.timer ? `<span class="step-timer">⏱ ${escapeHtml(s.timer)}</span>` : ""}
       </div>
     </li>
   `).join("");
@@ -462,21 +464,21 @@ function showDetail(id) {
   const notesHtml = recipe.notes ? `
     <div class="rte-notes">
       <div class="rte-notes-title">Recipe Notes</div>
-      <p>${recipe.notes}</p>
+      <p>${escapeHtml(recipe.notes)}</p>
     </div>
   ` : "";
 
   document.getElementById("recipe-detail").innerHTML = `
     <div class="rte-card">
 
-      ${recipe.image ? `<div class="rte-hero-img"><img src="${recipe.image}" alt="${recipe.title}" /></div>` : ""}
+      ${recipe.image ? `<div class="rte-hero-img"><img src="${escapeHtml(recipe.image)}" alt="${escapeHtml(recipe.title)}" loading="lazy" /></div>` : ""}
       <div class="rte-card-header">
         <div class="rte-card-title-row">
           <div class="rte-title-block">
-            <div class="rte-category">${cat?.label || recipe.category}</div>
-            <h2 class="rte-title">${recipe.title}</h2>
-            <p class="rte-desc">${recipe.description}</p>
-            ${recipe.yield ? `<p class="rte-yield"><strong>${recipe.yield}</strong></p>` : ""}
+            <div class="rte-category">${escapeHtml(cat?.label || recipe.category)}</div>
+            <h2 class="rte-title">${escapeHtml(recipe.title)}</h2>
+            <p class="rte-desc">${escapeHtml(recipe.description)}</p>
+            ${recipe.yield ? `<p class="rte-yield"><strong>${escapeHtml(recipe.yield)}</strong></p>` : ""}
           </div>
           <button class="rte-print-btn" onclick="window.print()">🖨 Print</button>
         </div>
@@ -484,7 +486,7 @@ function showDetail(id) {
         <div class="rte-meta-bar">
           <div class="rte-meta-item">
             <span class="rte-meta-label">Servings</span>
-            <span class="rte-meta-value">${recipe.servings || "—"}</span>
+            <span class="rte-meta-value">${escapeHtml(recipe.servings || "—")}</span>
           </div>
           <div class="rte-meta-item">
             <span class="rte-meta-label">Ingredients</span>
@@ -496,11 +498,11 @@ function showDetail(id) {
           </div>
           <div class="rte-meta-item">
             <span class="rte-meta-label">Category</span>
-            <span class="rte-meta-value">${cat?.emoji || ""} ${cat?.label || recipe.category}</span>
+            <span class="rte-meta-value">${cat?.emoji || ""} ${escapeHtml(cat?.label || recipe.category)}</span>
           </div>
           <div class="rte-meta-item">
             <span class="rte-meta-label">Dietary</span>
-            <span class="rte-meta-value rte-dietary--${recipe.dietary || ""}">${DIETARY_META[recipe.dietary]?.emoji || "—"} ${DIETARY_META[recipe.dietary]?.label || "—"}</span>
+            <span class="rte-meta-value rte-dietary--${escapeHtml(recipe.dietary || "")}">${DIETARY_META[recipe.dietary]?.emoji || "—"} ${escapeHtml(DIETARY_META[recipe.dietary]?.label || "—")}</span>
           </div>
         </div>
       </div>
@@ -678,13 +680,15 @@ function changeServings(id, delta) {
 
   const ratio = currentServings / baseServings;
   const list = document.getElementById("ingredients-display");
-  list.innerHTML = recipe.ingredients.map(ing => `
+  list.innerHTML = recipe.ingredients.map(ing => {
+    if (ing.section) return `<li class="ing-section-header">${escapeHtml(ing.section)}</li>`;
+    return `
     <li class="ing-item" onclick="this.classList.toggle('checked')">
       <span class="ing-check">✓</span>
-      <span class="ing-amount">${scaleAmount(ing.amount, ratio)}</span>
-      <span class="ing-name">${ing.item}</span>
-    </li>
-  `).join("");
+      <span class="ing-amount">${escapeHtml(scaleAmount(ing.amount, ratio))}</span>
+      <span class="ing-name">${escapeHtml(ing.item)}</span>
+    </li>`;
+  }).join("");
 }
 
 // Map Unicode fractions to decimal values
@@ -735,6 +739,32 @@ function formatNumber(n) {
   return n.toFixed(1).replace(/\.0$/, "");
 }
 
+// Split an amount like "2.5 tbsp", "1 ½ cups", "¼", "1/2 tsp" into a numeric
+// quantity and a unit string. Returns qty: null when there's no leading
+// number (e.g. "Salt" with a blank amount, or "to taste").
+function parseAmount(amount) {
+  const str = String(amount || "").trim();
+  if (!str) return { qty: null, unit: "" };
+
+  // Whole number followed by a unicode fraction, e.g. "1 ½"
+  let m = str.match(/^(\d+)\s*([½¼¾⅓⅔⅛⅜⅝⅞])\s*(.*)$/);
+  if (m) return { qty: parseInt(m[1]) + (UNICODE_FRACTIONS[m[2]] || 0), unit: m[3].trim() };
+
+  // Bare unicode fraction, e.g. "½"
+  m = str.match(/^([½¼¾⅓⅔⅛⅜⅝⅞])\s*(.*)$/);
+  if (m) return { qty: UNICODE_FRACTIONS[m[1]] || 0, unit: m[2].trim() };
+
+  // Ascii fraction, e.g. "1/2"
+  m = str.match(/^(\d+)\/(\d+)\s*(.*)$/);
+  if (m) return { qty: parseInt(m[1]) / parseInt(m[2]), unit: m[3].trim() };
+
+  // Whole or decimal, e.g. "16" or "2.5"
+  m = str.match(/^(\d*\.?\d+)\s*(.*)$/);
+  if (m) return { qty: parseFloat(m[1]), unit: m[2].trim() };
+
+  return { qty: null, unit: str };
+}
+
 function toggleMobileNav() {
   document.getElementById("mobile-nav").classList.toggle("open");
 }
@@ -745,7 +775,7 @@ function handleNewsletterSignup(e) {
   const email = document.getElementById("newsletter-email").value.trim();
   if (!email) return;
   // Store locally (in production, POST to your email service API here)
-  const subs = JSON.parse(localStorage.getItem("cc_subscribers") || "[]");
+  const subs = readStore("cc_subscribers", "[]");
   if (!subs.includes(email)) {
     subs.push(email);
     localStorage.setItem("cc_subscribers", JSON.stringify(subs));
@@ -762,7 +792,7 @@ const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const MEALS = ["Breakfast", "Lunch", "Dinner"];
 
 // planData[day][meal] = { recipeId, title } | null
-let planData = JSON.parse(localStorage.getItem("cc_meal_plan") || "{}");
+let planData = readStore("cc_meal_plan", "{}");
 let pendingSlot = null; // { day, meal } waiting for recipe pick
 
 function savePlan() {
@@ -790,7 +820,7 @@ function renderMealPlanner() {
         html += `
           <div class="planner-cell meal-slot has-recipe" onclick="openSlotPicker('${day}','${meal}')">
             <div class="planner-slot-content">
-              <span class="slot-recipe-name">${entry.emoji || "🍽️"} ${entry.title}</span>
+              <span class="slot-recipe-name">${entry.emoji || "🍽️"} ${escapeHtml(entry.title)}</span>
             </div>
             <button class="planner-slot-remove" onclick="removeSlot(event,'${day}','${meal}')">✕</button>
           </div>`;
@@ -810,7 +840,7 @@ function renderMealPlanner() {
   list.innerHTML = allRecipes().map(r => `
     <div class="planner-recipe-item" onclick="pickRecipeForSlot('${r.id || r._localId}')">
       <span>${r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️"}</span>
-      <span>${r.title}</span>
+      <span>${escapeHtml(r.title)}</span>
     </div>
   `).join("");
 }
@@ -827,13 +857,13 @@ function openSlotPicker(day, meal) {
   const items = recipes.map(r => `
     <div class="slot-picker-item" onclick="pickRecipeFromModal('${r.id || r._localId}')">
       <span>${r.emoji || CATEGORY_META[r.category]?.emoji || "🍽️"}</span>
-      <span>${r.title}</span>
+      <span>${escapeHtml(r.title)}</span>
     </div>
   `).join("");
 
   overlay.innerHTML = `
     <div class="slot-picker-modal">
-      <h3>${day} — ${meal}</h3>
+      <h3>${escapeHtml(day)} — ${escapeHtml(meal)}</h3>
       <p>Pick a recipe for this slot</p>
       <div class="slot-picker-list">${items}</div>
       <button class="slot-picker-cancel" onclick="closeSlotPicker()">Cancel</button>
@@ -906,13 +936,31 @@ function generateShoppingList() {
     return;
   }
 
-  // Deduplicate by ingredient name (case-insensitive)
+  // Deduplicate by ingredient name (case-insensitive) AND sum the amounts.
+  // Quantities are summed per-unit, so "2 tbsp" + "1 tbsp" -> "3 tbsp".
+  // Mismatched units ("2 tbsp" + "1 cup") are kept side by side ("2 tbsp + 1 cup"),
+  // and amounts with no parseable number ("to taste") are carried through as-is.
   const seen = new Map();
   allIngredients.forEach(ing => {
     const key = ing.item.toLowerCase().trim();
-    if (!seen.has(key)) seen.set(key, { amount: ing.amount, item: ing.item });
+    if (!seen.has(key)) seen.set(key, { item: ing.item, units: new Map(), extras: [] });
+    const rec = seen.get(key);
+    const { qty, unit } = parseAmount(ing.amount);
+    if (qty === null) {
+      const extra = String(ing.amount || "").trim();
+      if (extra && !rec.extras.includes(extra)) rec.extras.push(extra);
+    } else {
+      const u = unit.toLowerCase();
+      rec.units.set(u, (rec.units.get(u) || 0) + qty);
+    }
   });
-  const deduped = Array.from(seen.values());
+
+  const deduped = Array.from(seen.values()).map(rec => {
+    const parts = [];
+    rec.units.forEach((qty, unit) => parts.push(formatNumber(qty) + (unit ? " " + unit : "")));
+    parts.push(...rec.extras);
+    return { item: rec.item, amount: parts.join(" + ") };
+  });
 
   // Aisle groups — checked in order, first match wins
   const AISLES = [
@@ -947,7 +995,7 @@ function generateShoppingList() {
     if (group.items.length === 0) return;
     html += `<div class="shopping-aisle-header">${group.emoji} ${group.label}</div><ul class="shopping-aisle-list">`;
     group.items.forEach(ing => {
-      html += `<li onclick="this.classList.toggle('checked-item')">${ing.amount ? `<strong>${ing.amount}</strong> ` : ""}${ing.item}</li>`;
+      html += `<li onclick="this.classList.toggle('checked-item')">${ing.amount ? `<strong>${escapeHtml(ing.amount)}</strong> ` : ""}${escapeHtml(ing.item)}</li>`;
     });
     html += "</ul>";
   });
@@ -958,7 +1006,18 @@ function generateShoppingList() {
   output.scrollIntoView({ behavior: "smooth" });
 }
 
+// Build the admin category dropdown from CATEGORY_META so it can never drift
+// out of sync with the real category list (e.g. missing "appetizers").
+function populateCategorySelect() {
+  const sel = document.getElementById("f-category");
+  if (!sel) return;
+  sel.innerHTML = Object.entries(CATEGORY_META)
+    .map(([value, meta]) => `<option value="${value}">${escapeHtml(meta.label)}</option>`)
+    .join("");
+}
+
 // ── Init ─────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
+  populateCategorySelect();
   renderHome();
 });

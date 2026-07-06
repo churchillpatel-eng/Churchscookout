@@ -38,7 +38,7 @@
       <button class="nav-btn" onclick="showView('meal-planner')">Meal Planner</button>
       <button class="nav-btn" onclick="showView('about')">About</button>
       <button class="nav-btn" onclick="showView('work-with-me')" style="display:none">Work With Me</button>
-      <button class="nav-btn admin-btn" onclick="showAdminGate()" style="display:none">🔒 Add Recipe</button>
+      <button class="nav-btn admin-btn" onclick="showAdmin()" style="display:none">🔒 Add Recipe</button>
     </nav>
     <button class="hamburger" onclick="toggleMobileNav()">☰</button>
     <nav class="mobile-nav" id="mobile-nav">
@@ -48,7 +48,7 @@
       <button onclick="showView('meal-planner');toggleMobileNav()">Meal Planner</button>
       <button onclick="showView('about');toggleMobileNav()">About</button>
       <button onclick="showView('work-with-me');toggleMobileNav()" style="display:none">Work With Me</button>
-      <button onclick="showAdminGate();toggleMobileNav()" style="display:none">🔒 Add Recipe</button>
+      <button onclick="showAdmin();toggleMobileNav()" style="display:none">🔒 Add Recipe</button>
     </nav>
   </header>
 
@@ -84,7 +84,7 @@
 
         <div class="about-strip">
           <div class="about-strip-img">
-            <img src="churchill.jpg" alt="Churchill" class="about-photo" />
+            <img src="churchill.jpg" alt="Churchill" class="about-photo" loading="lazy" />
           </div>
           <div class="about-strip-text">
             <p class="about-eyebrow">About Churchill</p>
@@ -145,7 +145,7 @@
     <!-- ABOUT VIEW -->
     <div id="view-about" class="view">
       <div class="about-hero">
-        <img src="churchill.jpg" alt="Churchill" class="about-photo-lg" />
+        <img src="churchill.jpg" alt="Churchill" class="about-photo-lg" loading="lazy" />
         <h2>About Churchill</h2>
         <p class="about-hero-sub">Cook. Creator. Storyteller.</p>
       </div>
@@ -264,18 +264,6 @@
       </div>
     </div>
 
-    <!-- ADMIN GATE VIEW -->
-    <div id="view-admin-gate" class="view">
-      <div class="gate-card">
-        <div class="gate-icon">🔒</div>
-        <h2>Private Kitchen</h2>
-        <p>Enter your password to add or manage recipes.</p>
-        <input type="password" id="admin-password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()" />
-        <button class="btn-primary" onclick="checkPassword()">Enter</button>
-        <p id="password-error" class="error-msg" style="display:none">Incorrect password. Try again.</p>
-      </div>
-    </div>
-
     <!-- ADMIN PANEL VIEW -->
     <div id="view-admin" class="view">
       <div class="admin-header">
@@ -309,18 +297,8 @@
               </div>
               <div class="form-group">
                 <label>Category</label>
-                <select id="f-category">
-                  <option value="burgers">Burgers</option>
-                  <option value="chicken">Chicken</option>
-                  <option value="beef">Beef</option>
-                  <option value="seafood">Seafood</option>
-                  <option value="sides">Sides</option>
-                  <option value="sauces">Sauces & Marinades</option>
-                  <option value="marinades">Marinades</option>
-                  <option value="barbeque">Barbeque</option>
-                  <option value="desserts">Desserts</option>
-                  <option value="other">Other</option>
-                </select>
+                <!-- Options are populated from CATEGORY_META in app.js -->
+                <select id="f-category"></select>
               </div>
             </div>
           </div>
