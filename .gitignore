@@ -1,0 +1,7 @@
+# Claude Code local state — session worktrees, launch config, preview builds.
+# These include full app copies and build artifacts; never commit them.
+.claude/
+
+# OS cruft
+.DS_Store
+Thumbs.db

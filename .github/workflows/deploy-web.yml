@@ -2,7 +2,8 @@ name: Deploy web to Cloudflare
 
 # Auto-deploy the Next.js app in web/ to Cloudflare Workers on every push to
 # master that touches web/. Requires a repo secret CLOUDFLARE_API_TOKEN
-# (Workers Scripts: Edit). The account id lives in web/wrangler.jsonc.
+# (permission: Workers Scripts → Edit). The account id is pinned in
+# web/wrangler.jsonc so the deploy is non-interactive.
 on:
   push:
     branches: [master]
@@ -29,10 +30,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build (OpenNext → Cloudflare)
-        run: npx opennextjs-cloudflare build
-
-      - name: Deploy
-        run: npx wrangler deploy
+      - name: Build & deploy (OpenNext → Cloudflare)
+        run: npm run cf:deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
