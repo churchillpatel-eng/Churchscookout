@@ -130,6 +130,7 @@ header {
   background: #fff;
 }
 
+.mobile-nav a,
 .mobile-nav button {
   background: none;
   border: none;
@@ -1792,6 +1793,7 @@ footer {
     min-width: 44px;
     min-height: 44px;
   }
+  .mobile-nav a,
   .mobile-nav button { min-height: 48px; }
 
   /* Hero */

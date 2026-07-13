@@ -49,11 +49,30 @@ Append an object to `RECIPES` in `src/data/recipes.ts`, or use `/admin` to
 build one and paste the generated object. Follow the conventions in the file
 header (Title Case items, unicode fractions, unique `slug`).
 
+## Newsletter (Kit)
+
+The signup form posts to `/api/subscribe`, which adds the email to a
+[Kit](https://kit.com) form. Two secrets are required:
+
+| Name          | Where to find it                                            |
+| ------------- | ----------------------------------------------------------- |
+| `KIT_API_KEY` | Kit → Settings → Advanced → API → **API Key**               |
+| `KIT_FORM_ID` | Open the form in Kit; the number in the editor URL          |
+
+- **Local dev:** put both in `web/.env.local` (gitignored).
+- **Production:** add them as encrypted secrets on the Worker —
+  Cloudflare dashboard → Workers & Pages → `churchscookout` → Settings →
+  Variables and Secrets, or `npx wrangler secret put KIT_API_KEY` from `web/`.
+  Secrets persist across deploys, so this is a one-time setup.
+
+Until both are set the endpoint returns a friendly "not set up yet" message
+instead of failing. Kit sends its own confirmation email, so the form tells
+users to check their inbox.
+
 ## Roadmap (not in this build)
 
 - **Phase 1** — already here: SSG recipe pages + JSON-LD.
-- **Phase 2** — wire `/api/subscribe` to a durable store or email service so
-  signups are owned (currently stored on-device).
+- **Phase 2** — ✅ `/api/subscribe` now posts signups to Kit (see above).
 - **Phase 3** — Git-based CMS (Decap/Sanity) so recipes are authored in a UI
   that commits to the repo.
 - **Phase 4** — privacy-friendly analytics + sponsor inquiry pipeline.

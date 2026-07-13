@@ -1,42 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import { readStore } from "@/lib/storage";
 
-// Phase 0: signups are stored on-device so the form works end to end.
-// Phase 2 (roadmap): POST to /api/subscribe backed by a real email service.
+type Status = "idle" | "loading" | "done" | "error";
+
 export default function NewsletterSignup() {
   const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const value = email.trim();
-    if (!value) return;
+    if (!value || status === "loading") return;
 
-    const subs = readStore<string[]>("cc_subscribers", []);
-    if (!subs.includes(value)) {
-      subs.push(value);
-      try {
-        window.localStorage.setItem("cc_subscribers", JSON.stringify(subs));
-      } catch {
-        /* non-fatal */
+    setStatus("loading");
+    setError("");
+
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: value }),
+      });
+
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        setError(data.error || "Something went wrong. Please try again.");
+        setStatus("error");
+        return;
       }
-    }
 
-    setEmail("");
-    setDone(true);
-    setTimeout(() => setDone(false), 5000);
+      setEmail("");
+      setStatus("done");
+    } catch {
+      setError("Something went wrong. Please try again.");
+      setStatus("error");
+    }
   }
 
   return (
     <section className="newsletter-section">
       <div className="newsletter-inner">
         <div className="newsletter-text">
-          <p className="newsletter-eyebrow">Free weekly recipes</p>
+          <p className="newsletter-eyebrow">New recipes every two months</p>
           <h3>Join the Cookout</h3>
           <p>
-            Get one new recipe every week — plus tips, techniques, and the stories behind the
+            Get a new recipe every two months — plus tips, techniques, and the stories behind the
             food. No spam, ever.
           </p>
         </div>
@@ -47,14 +57,20 @@ export default function NewsletterSignup() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={status === "loading"}
           />
-          <button type="submit" className="btn-primary">
-            Subscribe
+          <button type="submit" className="btn-primary" disabled={status === "loading"}>
+            {status === "loading" ? "Joining…" : "Subscribe"}
           </button>
         </form>
-        {done && (
+        {status === "done" && (
           <p className="newsletter-success" style={{ display: "block" }}>
-            🎉 You&apos;re in! First recipe lands in your inbox this week.
+            🎉 You&apos;re in! Check your inbox to confirm your subscription.
+          </p>
+        )}
+        {status === "error" && (
+          <p className="newsletter-success" style={{ display: "block", color: "var(--accent)" }}>
+            {error}
           </p>
         )}
       </div>

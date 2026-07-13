@@ -4,6 +4,9 @@ export const metadata: Metadata = {
   title: "Work With Me",
   description:
     "Partner with Church's Cookout — authentic Indian-inspired food content for brands reaching an engaged cooking audience.",
+  // Not launched yet: keep out of search results and unlinked in nav/footer.
+  // Remove this line to make the page public when ready.
+  robots: { index: false, follow: false },
 };
 
 export default function WorkWithMePage() {
@@ -64,7 +67,7 @@ export default function WorkWithMePage() {
               <div className="wwm-format-icon">📧</div>
               <h4>Newsletter Feature</h4>
               <p>
-                Sponsored mention in the weekly Church&apos;s Cookout email to a curated subscriber
+                Sponsored mention in the Church&apos;s Cookout email to a curated subscriber
                 list of home cooking enthusiasts.
               </p>
             </div>

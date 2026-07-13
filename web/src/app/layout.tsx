@@ -5,6 +5,9 @@ import "./legacy.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  // Resolves relative OG/Twitter image paths to absolute URLs so social
+  // shares render the preview image instead of pointing at localhost.
+  metadataBase: new URL("https://churchscookout.com"),
   title: {
     default: "Church's Cookout — Indian-Inspired Recipes & Meal Planning",
     template: "%s — Church's Cookout",
