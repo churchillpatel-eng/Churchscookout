@@ -179,8 +179,9 @@ export default function AdminPage() {
         <div className="export-box">
           <h3>Recipe Saved!</h3>
           <p>
-            Copy the object below and add it to the <code>RECIPES</code> array in{" "}
-            <code>src/data/recipes.ts</code> to publish it.
+            Copy the object below into a new file{" "}
+            <code>src/data/recipes/&lt;slug&gt;.ts</code> (default-export it), then
+            add it to the array in <code>src/data/recipes/index.ts</code> to publish.
           </p>
           <textarea rows={20} readOnly value={exportCode} />
           <button className="btn-outline" onClick={copy}>

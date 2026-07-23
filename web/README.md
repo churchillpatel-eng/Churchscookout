@@ -33,7 +33,9 @@ src/
 │   └── globals.css          # app-level overrides on top of legacy.css
 ├── components/              # presentational + interactive UI
 ├── data/
-│   ├── recipes.ts           # ← source of truth for recipes
+│   ├── recipes/             # ← source of truth: one file per recipe
+│   │   ├── index.ts         #   assembles the RECIPES array
+│   │   └── <slug>.ts        #   one recipe each
 │   └── categories.ts        # category + dietary metadata
 ├── lib/                     # domain logic (framework-free, unit-testable)
 │   ├── recipes.ts           # accessors
@@ -45,8 +47,9 @@ src/
 
 ## Adding a recipe
 
-Append an object to `RECIPES` in `src/data/recipes.ts`, or use `/admin` to
-build one and paste the generated object. Follow the conventions in the file
+Create `src/data/recipes/<slug>.ts` (default-export a `Recipe`) and append it
+to the array in `src/data/recipes/index.ts`, or use `/admin` to build one and
+paste the generated object. Follow the conventions in the index file
 header (Title Case items, unicode fractions, unique `slug`).
 
 ## Newsletter (Kit)
