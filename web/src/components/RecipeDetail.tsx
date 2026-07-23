@@ -56,16 +56,12 @@ export default function RecipeDetail({ recipe }: { recipe: Recipe }) {
 
           <div className="rte-meta-bar">
             <div className="rte-meta-item">
-              <span className="rte-meta-label">Servings</span>
+              <span className="rte-meta-label">Yields</span>
               <span className="rte-meta-value">{recipe.servings || "—"}</span>
             </div>
             <div className="rte-meta-item">
               <span className="rte-meta-label">Ingredients</span>
               <span className="rte-meta-value">{countIngredients(recipe)}</span>
-            </div>
-            <div className="rte-meta-item">
-              <span className="rte-meta-label">Steps</span>
-              <span className="rte-meta-value">{recipe.steps.length}</span>
             </div>
             <div className="rte-meta-item">
               <span className="rte-meta-label">Category</span>
