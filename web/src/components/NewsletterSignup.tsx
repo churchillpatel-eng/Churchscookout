@@ -43,7 +43,6 @@ export default function NewsletterSignup() {
     <section className="newsletter-section">
       <div className="newsletter-inner">
         <div className="newsletter-text">
-          <p className="newsletter-eyebrow">New recipes every two months</p>
           <h3>Join the Cookout</h3>
           <p>
             Get a new recipe every two months — plus tips, techniques, and the stories behind the
