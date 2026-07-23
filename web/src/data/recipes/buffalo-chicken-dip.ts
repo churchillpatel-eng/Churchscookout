@@ -7,7 +7,7 @@ const recipe: Recipe = {
   title: "Buffalo Chicken Dip",
   description:
     "Bold, tangy buffalo flavor you love — with cream cheese and mayo still in the mix, just made lighter. ~120 calories per serving.",
-  servings: 8,
+  servings: 1,
   category: "appetizers",
   emoji: "🫕",
   ingredients: [
