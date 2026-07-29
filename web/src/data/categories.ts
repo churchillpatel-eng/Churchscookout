@@ -22,7 +22,6 @@ export const CATEGORY_META: Record<string, CategoryMeta> = {
   seafood: { label: "Seafood", emoji: "🦐" },
   sides: { label: "Sides", emoji: "🌽" },
   sauces: { label: "Sauces & Marinades", emoji: "🫙" },
-  marinades: { label: "Marinades", emoji: "🫙" },
   barbeque: { label: "Barbeque", emoji: "🔥" },
   appetizers: { label: "Appetizers", emoji: "🫕" },
   breakfast: { label: "Breakfast", emoji: "🍳" },

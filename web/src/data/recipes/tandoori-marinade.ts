@@ -10,7 +10,7 @@ const recipe: Recipe = {
   description:
     "A deeply spiced, yogurt-based marinade built for high heat. Authentic tandoori flavor with bloomed spices, ginger-garlic, and the unmistakable depth of kala namak.",
   servings: 1,
-  category: "marinades",
+  category: "sauces",
   emoji: "🫙",
   ingredients: [
     { amount: "½ cup", item: "Full-Fat Greek Yogurt" },

@@ -36,7 +36,6 @@ const CATEGORY_META = {
   seafood:  { label: "Seafood",            emoji: "🦐" },
   sides:    { label: "Sides",              emoji: "🌽" },
   sauces:    { label: "Sauces & Marinades", emoji: "🫙" },
-  marinades:  { label: "Marinades",          emoji: "🫙" },
   barbeque:    { label: "Barbeque",    emoji: "🔥" },
   appetizers:  { label: "Appetizers",  emoji: "🫕" },
   desserts:    { label: "Desserts",    emoji: "🍦" },
@@ -118,7 +117,7 @@ const RECIPES = [
     yield: "1 serving is roughly ~2 lbs of chicken",
     description: "A deeply spiced, yogurt-based marinade built for high heat. Authentic tandoori flavor with bloomed spices, ginger-garlic, and the unmistakable depth of kala namak.",
     servings: 1,
-    category: "marinades",
+    category: "sauces",
     emoji: "🫙",
     ingredients: [
       { amount: "½ cup",    item: "Full-Fat Greek Yogurt" },
