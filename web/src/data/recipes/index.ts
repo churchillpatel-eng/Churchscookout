@@ -3,6 +3,7 @@ import greenGarlicMintCilantroChickenBurgers from "./green-garlic-mint-cilantro-
 import tandooriMarinade from "./tandoori-marinade";
 import paneerTikka from "./paneer-tikka";
 import buffaloChickenDip from "./buffalo-chicken-dip";
+import eggBurji from "./egg-burji";
 
 // ── Recipe Data ──────────────────────────────────────────────────────
 // The source of truth for all published recipes. Each recipe lives in its
@@ -26,4 +27,5 @@ export const RECIPES: Recipe[] = [
   tandooriMarinade,
   paneerTikka,
   buffaloChickenDip,
+  eggBurji,
 ];
