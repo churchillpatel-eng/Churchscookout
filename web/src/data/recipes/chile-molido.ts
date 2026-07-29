@@ -42,7 +42,7 @@ const recipe: Recipe = {
     },
   ],
   notes:
-    "The red wine vinegar is the secret ingredient—it makes the flavor come alive!\n\nThis sauce can be frozen and used later.\n\nRecipe from El Potrero Trading Post, Chimayo, NM.",
+    "The red wine vinegar is the secret ingredient—it makes the flavor come alive!\n\nThis sauce can be frozen and used later.",
 };
 
 export default recipe;
