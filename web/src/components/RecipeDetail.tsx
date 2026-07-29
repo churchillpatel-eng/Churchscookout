@@ -43,11 +43,6 @@ export default function RecipeDetail({ recipe }: { recipe: Recipe }) {
               <div className="rte-category">{categoryLabel(recipe.category)}</div>
               <h2 className="rte-title">{recipe.title}</h2>
               <p className="rte-desc">{recipe.description}</p>
-              {recipe.yield && (
-                <p className="rte-yield">
-                  <strong>{recipe.yield}</strong>
-                </p>
-              )}
             </div>
             <button className="rte-print-btn" onClick={() => window.print()}>
               🖨 Print
@@ -57,7 +52,7 @@ export default function RecipeDetail({ recipe }: { recipe: Recipe }) {
           <div className="rte-meta-bar">
             <div className="rte-meta-item">
               <span className="rte-meta-label">Yields</span>
-              <span className="rte-meta-value">{recipe.servings || "—"}</span>
+              <span className="rte-meta-value">{recipe.yield || recipe.servings || "—"}</span>
             </div>
             <div className="rte-meta-item">
               <span className="rte-meta-label">Ingredients</span>

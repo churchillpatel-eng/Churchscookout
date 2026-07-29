@@ -7,7 +7,8 @@ const recipe: Recipe = {
   title: "Chile Molido",
   description:
     "Traditional New Mexico red chile sauce made with ground chile (chile molido), featuring a savory roux base and the secret ingredient of red wine vinegar.",
-  servings: 4,
+  servings: 1,
+  yield: "4",
   category: "sauces",
   emoji: "🌶️",
   ingredients: [

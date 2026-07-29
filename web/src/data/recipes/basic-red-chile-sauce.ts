@@ -7,7 +7,8 @@ const recipe: Recipe = {
   title: "Basic Red Chile Sauce (Chile Caribe)",
   description:
     "Traditional New Mexico red chile sauce with crushed chile caribe, featuring a secret ingredient of red wine vinegar to make the flavors come alive.",
-  servings: 4,
+  servings: 1,
+  yield: "4",
   category: "sauces",
   emoji: "🌶️",
   ingredients: [
