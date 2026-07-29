@@ -7,8 +7,8 @@ const recipe: Recipe = {
   title: "Egg Burji",
   description:
     "The 10-minute masala scramble that turns eggs into a full meal. Tempered cumin and mustard seeds, curry leaves, and a punchy spice base — this is how eggs are meant to eat.",
-  servings: 2,
-  category: "other",
+  servings: 1,
+  category: "breakfast",
   emoji: "🍳",
   ingredients: [
     { amount: "2 tbsp", item: "Neutral Oil" },
@@ -19,7 +19,7 @@ const recipe: Recipe = {
     { amount: "1", item: "Onion, Finely Chopped" },
     { amount: "½", item: "Tomato, Chopped" },
     { amount: "2", item: "Thai Chilies, Slit" },
-    { amount: "4", item: "Eggs, Beaten" },
+    { amount: "2", item: "Eggs, Beaten" },
     { amount: "Handful", item: "Fresh Cilantro, Chopped" },
     { amount: "", item: "Salt, To Taste" },
     { section: "Spices" },
