@@ -1,5 +1,18 @@
 import { NextResponse } from "next/server";
 
+// Allow the legacy static site (and the app itself) to call this endpoint
+// cross-origin. This is a public newsletter signup — Kit handles verification
+// and double opt-in — so a permissive origin is acceptable here.
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+} as const;
+
+export function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
+
 // ── Newsletter subscribe → Kit (formerly ConvertKit) ─────────────────
 // Posts to the form "subscribe" endpoint so Kit applies the form's opt-in
 // and welcome-email settings. Configure two values (see web/README →
@@ -11,7 +24,10 @@ export async function POST(request: Request) {
   const { email } = await request.json().catch(() => ({ email: "" }));
 
   if (typeof email !== "string" || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-    return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Please enter a valid email address." },
+      { status: 400, headers: CORS_HEADERS },
+    );
   }
 
   const apiKey = process.env.KIT_API_KEY;
@@ -19,7 +35,7 @@ export async function POST(request: Request) {
   if (!apiKey || !formId) {
     return NextResponse.json(
       { error: "The newsletter isn’t set up yet — check back soon." },
-      { status: 503 },
+      { status: 503, headers: CORS_HEADERS },
     );
   }
 
@@ -33,15 +49,15 @@ export async function POST(request: Request) {
     if (!res.ok) {
       return NextResponse.json(
         { error: "Something went wrong. Please try again in a moment." },
-        { status: 502 },
+        { status: 502, headers: CORS_HEADERS },
       );
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true }, { headers: CORS_HEADERS });
   } catch {
     return NextResponse.json(
       { error: "Something went wrong. Please try again in a moment." },
-      { status: 502 },
+      { status: 502, headers: CORS_HEADERS },
     );
   }
 }

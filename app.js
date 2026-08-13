@@ -769,21 +769,57 @@ function toggleMobileNav() {
 }
 
 // ── Newsletter ───────────────────────────────────────────────────────
-function handleNewsletterSignup(e) {
+// Newsletter endpoint. Posts to the same /api/subscribe route the Next.js app
+// uses, which adds the email to the Kit form and — with double opt-in enabled
+// on that form — triggers the confirmation email. Relative URL works when this
+// site is served from the same origin as the API; if the static site is hosted
+// on a different origin, set this to the absolute URL, e.g.
+// "https://churchscookout.com/api/subscribe" (the route sends CORS headers).
+const SUBSCRIBE_ENDPOINT = "/api/subscribe";
+
+async function handleNewsletterSignup(e) {
   e.preventDefault();
-  const email = document.getElementById("newsletter-email").value.trim();
+  const input = document.getElementById("newsletter-email");
+  const successEl = document.getElementById("newsletter-success");
+  const button = e.target.querySelector('button[type="submit"]');
+  const email = input.value.trim();
   if (!email) return;
-  // Store locally (in production, POST to your email service API here)
-  const subs = readStore("cc_subscribers", "[]");
-  if (!subs.includes(email)) {
-    subs.push(email);
-    localStorage.setItem("cc_subscribers", JSON.stringify(subs));
+
+  function showMessage(text, isError) {
+    successEl.textContent = text;
+    successEl.style.color = isError ? "var(--accent)" : "";
+    successEl.style.display = "block";
   }
-  document.getElementById("newsletter-email").value = "";
-  document.getElementById("newsletter-success").style.display = "block";
-  setTimeout(() => {
-    document.getElementById("newsletter-success").style.display = "none";
-  }, 5000);
+
+  const originalLabel = button ? button.textContent : "";
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Joining…";
+  }
+
+  try {
+    const res = await fetch(SUBSCRIBE_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      showMessage(data.error || "Something went wrong. Please try again.", true);
+      return;
+    }
+
+    input.value = "";
+    showMessage("🎉 You're in! Check your inbox to confirm your subscription.", false);
+  } catch {
+    showMessage("Something went wrong. Please try again.", true);
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = originalLabel;
+    }
+  }
 }
 
 // ── Meal Planner ─────────────────────────────────────────────────────
