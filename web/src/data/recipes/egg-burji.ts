@@ -4,6 +4,7 @@ const recipe: Recipe = {
   id: 5,
   slug: "egg-burji",
   dietary: "vegetarian",
+  image: "/egg-burji.jpg",
   title: "Egg Burji",
   description:
     "The 10-minute masala scramble that turns eggs into a full meal. Tempered cumin and mustard seeds, curry leaves, and a punchy spice base — this is how eggs are meant to eat.",
