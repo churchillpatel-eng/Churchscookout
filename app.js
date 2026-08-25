@@ -769,13 +769,12 @@ function toggleMobileNav() {
 }
 
 // ── Newsletter ───────────────────────────────────────────────────────
-// Newsletter endpoint. Posts to the same /api/subscribe route the Next.js app
-// uses, which adds the email to the Kit form and — with double opt-in enabled
-// on that form — triggers the confirmation email. Relative URL works when this
-// site is served from the same origin as the API; if the static site is hosted
-// on a different origin, set this to the absolute URL, e.g.
-// "https://churchscookout.com/api/subscribe" (the route sends CORS headers).
-const SUBSCRIBE_ENDPOINT = "/api/subscribe";
+// Newsletter → Kit (ConvertKit). Submits straight to the Kit form's hosted
+// subscribe endpoint so Kit handles the subscription and the double opt-in
+// confirmation email. The form id/uid are public (from the Kit embed code).
+// Keeping the site's own markup here means the form matches the site design
+// instead of Kit's default embed styling.
+const KIT_FORM_ACTION = "https://app.kit.com/forms/9844914/subscriptions";
 
 async function handleNewsletterSignup(e) {
   e.preventDefault();
@@ -798,15 +797,14 @@ async function handleNewsletterSignup(e) {
   }
 
   try {
-    const res = await fetch(SUBSCRIBE_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+    // multipart/form-data with the `email_address` field is a CORS-simple
+    // request (no preflight) — the same shape Kit's own embed submits.
+    const body = new FormData();
+    body.append("email_address", email);
+    const res = await fetch(KIT_FORM_ACTION, { method: "POST", body });
 
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      showMessage(data.error || "Something went wrong. Please try again.", true);
+      showMessage("Something went wrong. Please try again.", true);
       return;
     }
 

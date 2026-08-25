@@ -18,15 +18,18 @@ export default function NewsletterSignup() {
     setError("");
 
     try {
-      const res = await fetch("/api/subscribe", {
+      // Submit straight to the Kit (ConvertKit) form so Kit handles the
+      // subscription and double opt-in confirmation email. Multipart form data
+      // with `email_address` mirrors Kit's own embed and needs no preflight.
+      const body = new FormData();
+      body.append("email_address", value);
+      const res = await fetch("https://app.kit.com/forms/9844914/subscriptions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: value }),
+        body,
       });
 
       if (!res.ok) {
-        const data = (await res.json().catch(() => ({}))) as { error?: string };
-        setError(data.error || "Something went wrong. Please try again.");
+        setError("Something went wrong. Please try again.");
         setStatus("error");
         return;
       }
