@@ -2042,3 +2042,105 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   .cc-overlay, .cc-dialog, .cc-toast, .cc-toast.cc-out { animation: none; }
 }
+/* ── My Pantry ── */
+.pantry-panel {
+  max-width: 1160px;
+  margin: 0 auto 32px;
+  padding: 0 32px;
+}
+.pantry-hint {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-style: italic;
+}
+.pantry-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.pantry-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-light);
+  color: var(--dark);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+.pantry-chip:hover { background: var(--accent); color: #fff; }
+.pantry-chip-x { font-size: 0.75rem; opacity: 0.8; }
+.pantry-clear {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.pantry-clear:hover { color: var(--accent); }
+.pantry-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 28px;
+  align-items: center;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--dark);
+}
+.pantry-toggle,
+.pantry-max {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.pantry-toggle input { width: 16px; height: 16px; accent-color: var(--accent); }
+.pantry-max select {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: var(--black);
+}
+.pantry-results {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 32px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+.pantry-group-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 22px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.pantry-results .recipe-grid { padding: 0; margin: 0; }
+.pantry-result { display: flex; flex-direction: column; }
+.pantry-match {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.pantry-match strong { color: var(--accent); font-weight: 700; }
+.pantry-missing { color: var(--muted); }

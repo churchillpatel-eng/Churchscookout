@@ -332,6 +332,7 @@ function showView(name) {
   if (name === "recipes")       renderRecipes();
   if (name === "categories")    renderCategories();
   if (name === "meal-planner")  renderMealPlanner();
+  if (name === "pantry")        renderPantry();
   if (name === "about")         {} // static content
   if (name === "work-with-me")  {} // static content
 }
@@ -1120,6 +1121,172 @@ function populateCategorySelect() {
   sel.innerHTML = Object.entries(CATEGORY_META)
     .map(([value, meta]) => `<option value="${value}">${escapeHtml(meta.label)}</option>`)
     .join("");
+}
+
+// ── My Pantry ────────────────────────────────────────────────────────
+// Recommend recipes based on ingredients the user has. Mirrors the logic in
+// web/src/lib/pantry.ts. Staples (salt/pepper/oil/water/sugar) are assumed
+// on-hand by default (togglable). State persists under "cc_pantry".
+const PANTRY_STAPLES = ["salt", "black pepper", "peppercorn", "oil", "water", "sugar"];
+let pantryState = readStore("cc_pantry", '{"items":[],"assumeStaples":true}');
+let pantryMaxMissing = 99;
+
+function savePantry() {
+  localStorage.setItem("cc_pantry", JSON.stringify(pantryState));
+}
+
+function pantryNormalize(name) {
+  return String(name || "")
+    .toLowerCase()
+    .split(",")[0]
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function pantryStem(t) {
+  if (t.length > 3) {
+    if (t.endsWith("es")) return t.slice(0, -2);
+    if (t.endsWith("s") && !t.endsWith("ss")) return t.slice(0, -1);
+  }
+  return t;
+}
+function pantryTokens(s) { return pantryNormalize(s).split(" ").filter(Boolean).map(pantryStem); }
+function pantryTitleCase(s) { return s.replace(/\b\w/g, (c) => c.toUpperCase()); }
+
+function pantryIsStaple(core) {
+  const tokens = core.split(" ").filter(Boolean).map(pantryStem);
+  return PANTRY_STAPLES.some((st) => st.split(" ").map(pantryStem).every((t) => tokens.includes(t)));
+}
+function pantrySubset(a, b) { return a.length > 0 && a.every((t) => b.includes(t)); }
+
+function pantryRank(recipes, items, assumeStaples) {
+  const pantrySets = items.map(pantryTokens).filter((t) => t.length > 0);
+  return recipes
+    .map((recipe) => {
+      const reals = recipe.ingredients.filter((i) => !i.section && i.item);
+      let have = 0;
+      const missing = [];
+      reals.forEach((ing) => {
+        const core = pantryNormalize(ing.item);
+        const ingTokens = core.split(" ").filter(Boolean).map(pantryStem);
+        if (assumeStaples && pantryIsStaple(core)) have += 1;
+        else if (pantrySets.some((p) => pantrySubset(p, ingTokens) || pantrySubset(ingTokens, p))) have += 1;
+        else missing.push(core);
+      });
+      return { recipe, have, total: reals.length, missing, missingCount: missing.length };
+    })
+    .sort((a, b) => a.missingCount - b.missingCount || a.total - b.total || a.recipe.title.localeCompare(b.recipe.title));
+}
+
+function pantryVocabulary() {
+  const set = new Set();
+  allRecipes().forEach((r) => {
+    r.ingredients.filter((i) => !i.section && i.item).forEach((i) => {
+      const core = pantryNormalize(i.item);
+      if (core) set.add(core);
+    });
+  });
+  return Array.from(set).sort();
+}
+
+function addPantryFromInput() {
+  const input = document.getElementById("pantry-input");
+  const value = pantryNormalize(input.value);
+  if (!value) return;
+  if (!pantryState.items.includes(value)) pantryState.items.push(value);
+  input.value = "";
+  savePantry();
+  renderPantry();
+  input.focus();
+}
+function pantryInputKey(e) {
+  if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addPantryFromInput(); }
+}
+function removePantryItem(value) {
+  pantryState.items = pantryState.items.filter((i) => i !== value);
+  savePantry();
+  renderPantry();
+}
+function clearPantry() {
+  pantryState.items = [];
+  savePantry();
+  renderPantry();
+}
+function togglePantryStaples(checkbox) {
+  pantryState.assumeStaples = checkbox.checked;
+  savePantry();
+  renderPantry();
+}
+function setPantryMax(select) {
+  pantryMaxMissing = Number(select.value);
+  renderPantry();
+}
+
+function pantryMatchCard(m) {
+  const uniqMissing = Array.from(new Set(m.missing));
+  const miss = uniqMissing.length
+    ? ` · Missing: ${escapeHtml(uniqMissing.map(pantryTitleCase).join(", "))}`
+    : "";
+  return `
+    <div class="pantry-result">
+      ${recipeCardHtml(m.recipe)}
+      <p class="pantry-match"><strong>You have ${m.have} of ${m.total}</strong>${miss}</p>
+    </div>`;
+}
+
+function renderPantry() {
+  // Autocomplete vocabulary
+  const vocab = document.getElementById("pantry-vocab");
+  if (vocab) vocab.innerHTML = pantryVocabulary().map((v) => `<option value="${escapeHtml(v)}"></option>`).join("");
+
+  // Sync controls
+  const staplesEl = document.getElementById("pantry-staples");
+  if (staplesEl) staplesEl.checked = !!pantryState.assumeStaples;
+  const maxEl = document.getElementById("pantry-max");
+  if (maxEl) maxEl.value = String(pantryMaxMissing);
+
+  // Chips
+  const chips = document.getElementById("pantry-chips");
+  if (chips) {
+    if (pantryState.items.length) {
+      chips.innerHTML =
+        pantryState.items
+          .map(
+            (item) =>
+              `<button type="button" class="pantry-chip" onclick="removePantryItem('${escapeHtml(item)}')" aria-label="Remove ${escapeHtml(item)}">${escapeHtml(pantryTitleCase(item))}<span class="pantry-chip-x" aria-hidden="true">✕</span></button>`,
+          )
+          .join("") +
+        `<button type="button" class="pantry-clear" onclick="clearPantry()">Clear all</button>`;
+    } else {
+      chips.innerHTML = `<p class="pantry-hint">Your pantry is empty. Add a few ingredients to get started.</p>`;
+    }
+  }
+
+  // Results
+  const out = document.getElementById("pantry-results");
+  if (!out) return;
+  if (!pantryState.items.length) {
+    out.innerHTML = `<div class="empty-state"><div class="es-icon">🧑‍🍳</div><h3>What can you make tonight?</h3><p>Add the ingredients you have and we'll match them to recipes.</p></div>`;
+    return;
+  }
+  const matches = pantryRank(allRecipes(), pantryState.items, !!pantryState.assumeStaples);
+  const ready = matches.filter((m) => m.missingCount === 0);
+  const almost = matches.filter((m) => m.missingCount > 0 && m.missingCount <= pantryMaxMissing);
+
+  if (!ready.length && !almost.length) {
+    out.innerHTML = `<div class="empty-state"><div class="es-icon">🔎</div><h3>Nothing matches yet</h3><p>Add more ingredients, or allow more missing items above.</p></div>`;
+    return;
+  }
+  let html = "";
+  if (ready.length) {
+    html += `<section><h3 class="pantry-group-title">✅ Ready to cook (${ready.length})</h3><div class="recipe-grid">${ready.map(pantryMatchCard).join("")}</div></section>`;
+  }
+  if (almost.length) {
+    html += `<section><h3 class="pantry-group-title">🛒 Almost there (${almost.length})</h3><div class="recipe-grid">${almost.map(pantryMatchCard).join("")}</div></section>`;
+  }
+  out.innerHTML = html;
 }
 
 // ── Init ─────────────────────────────────────────────────────────────

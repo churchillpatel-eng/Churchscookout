@@ -36,6 +36,7 @@
       <button class="nav-btn" onclick="showView('recipes')">Recipes</button>
       <button class="nav-btn" onclick="showView('categories')">Categories</button>
       <button class="nav-btn" onclick="showView('meal-planner')">Meal Planner</button>
+      <button class="nav-btn" onclick="showView('pantry')">My Pantry</button>
       <button class="nav-btn" onclick="showView('about')">About</button>
       <button class="nav-btn" onclick="showView('work-with-me')" style="display:none">Work With Me</button>
       <button class="nav-btn admin-btn" onclick="showAdmin()" style="display:none">🔒 Add Recipe</button>
@@ -46,6 +47,7 @@
       <button onclick="showView('recipes');toggleMobileNav()">Recipes</button>
       <button onclick="showView('categories');toggleMobileNav()">Categories</button>
       <button onclick="showView('meal-planner');toggleMobileNav()">Meal Planner</button>
+      <button onclick="showView('pantry');toggleMobileNav()">My Pantry</button>
       <button onclick="showView('about');toggleMobileNav()">About</button>
       <button onclick="showView('work-with-me');toggleMobileNav()" style="display:none">Work With Me</button>
       <button onclick="showAdmin();toggleMobileNav()" style="display:none">🔒 Add Recipe</button>
@@ -203,6 +205,41 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- MY PANTRY VIEW -->
+    <div id="view-pantry" class="view">
+      <div class="page-header">
+        <h2>My Pantry</h2>
+        <p class="page-sub">Add what you have on hand and we'll show you what you can cook — starting with the recipes you can make right now.</p>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="pantry-input" list="pantry-vocab" placeholder="Add an ingredient (e.g. chicken, onion, yogurt)…" onkeydown="pantryInputKey(event)" aria-label="Add a pantry ingredient" />
+        <datalist id="pantry-vocab"></datalist>
+        <button class="btn-primary" onclick="addPantryFromInput()">Add</button>
+      </div>
+      <div class="pantry-panel">
+        <div id="pantry-chips" class="pantry-chips"></div>
+        <div class="pantry-controls">
+          <label class="pantry-toggle">
+            <input type="checkbox" id="pantry-staples" checked onchange="togglePantryStaples(this)" />
+            Assume I have staples (salt, pepper, oil, water, sugar)
+          </label>
+          <label class="pantry-max">
+            Show recipes missing up to
+            <select id="pantry-max" onchange="setPantryMax(this)">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="99" selected>any number of</option>
+            </select>
+            ingredients
+          </label>
+        </div>
+      </div>
+      <div id="pantry-results" class="pantry-results"></div>
     </div>
 
     <!-- WORK WITH ME VIEW -->

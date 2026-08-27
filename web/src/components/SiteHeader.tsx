@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: "/recipes", label: "Recipes" },
   { href: "/categories", label: "Categories" },
   { href: "/meal-planner", label: "Meal Planner" },
+  { href: "/pantry", label: "My Pantry" },
   { href: "/about", label: "About" },
 ];
 
