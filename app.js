@@ -52,6 +52,7 @@ const RECIPES = [
     title: "Green Garlic, Mint & Cilantro Chicken Burgers",
     description: "A bright, herb-forward chicken burger built around mint, cilantro, and green garlic.",
     servings: 1,
+    yield: "Yields 4",
     category: "burgers",
     emoji: "🍔",
     ingredients: [

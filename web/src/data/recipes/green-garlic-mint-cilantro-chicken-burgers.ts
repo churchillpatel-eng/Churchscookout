@@ -8,6 +8,7 @@ const recipe: Recipe = {
   description:
     "A bright, herb-forward chicken burger built around mint, cilantro, and green garlic.",
   servings: 1,
+  yield: "4",
   category: "burgers",
   emoji: "🍔",
   ingredients: [
