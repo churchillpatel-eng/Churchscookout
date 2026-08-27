@@ -5,6 +5,7 @@ import type { Ingredient, Recipe } from "@/types";
 import { categoryEmoji } from "@/data/categories";
 import { useLocalStorage } from "@/lib/storage";
 import { aggregateIngredients, groupByAisle, type ShoppingAisle } from "@/lib/shopping-list";
+import { useDialogs } from "@/components/DialogProvider";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const MEALS = ["Breakfast", "Lunch", "Dinner"];
@@ -19,6 +20,8 @@ export default function MealPlanner({ recipes }: { recipes: Recipe[] }) {
   const [picker, setPicker] = useState<{ day: string; meal: string } | null>(null);
   const [aisles, setAisles] = useState<ShoppingAisle[] | null>(null);
   const [crossed, setCrossed] = useState<Set<string>>(new Set());
+
+  const { confirm, alert } = useDialogs();
 
   const bySlug = useMemo(() => new Map(recipes.map((r) => [r.slug, r])), [recipes]);
   const recipeEmoji = (r: Recipe) => r.emoji || categoryEmoji(r.category);
@@ -43,8 +46,15 @@ export default function MealPlanner({ recipes }: { recipes: Recipe[] }) {
     });
   }
 
-  function clearPlan() {
-    if (!confirm("Clear the entire meal plan?")) return;
+  async function clearPlan() {
+    const ok = await confirm({
+      badge: "🗑️",
+      title: "Clear the entire meal plan?",
+      message: "This removes every recipe from all seven days. You can’t undo it.",
+      confirmLabel: "Clear plan",
+      cancelLabel: "Keep it",
+    });
+    if (!ok) return;
     setPlan({});
     setAisles(null);
   }
@@ -59,7 +69,12 @@ export default function MealPlanner({ recipes }: { recipes: Recipe[] }) {
       }
     }
     if (ingredients.length === 0) {
-      alert("Add some recipes to your plan first!");
+      alert({
+        badge: "🛒",
+        title: "Your plan is empty",
+        message: "Add a few recipes to the week before building a shopping list.",
+        confirmLabel: "Got it",
+      });
       return;
     }
     setAisles(groupByAisle(aggregateIngredients(ingredients)));

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import DialogProvider from "@/components/DialogProvider";
 import "./legacy.css";
 import "./globals.css";
 
@@ -39,9 +40,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <SiteHeader />
-        <main>{children}</main>
-        <SiteFooter />
+        <DialogProvider>
+          <SiteHeader />
+          <main>{children}</main>
+          <SiteFooter />
+        </DialogProvider>
       </body>
     </html>
   );

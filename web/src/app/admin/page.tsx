@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { CATEGORY_META, categoryEmoji } from "@/data/categories";
 import type { Dietary } from "@/types";
+import { useDialogs } from "@/components/DialogProvider";
 
 // Backend authoring is a later phase. For now this builds a recipe object
 // to paste into src/data/recipes.ts (mirrors the old export-code flow).
@@ -41,6 +42,7 @@ export default function AdminPage() {
     { text: "", timer: "" },
   ]);
   const [exportCode, setExportCode] = useState<string | null>(null);
+  const { alert, toast } = useDialogs();
 
   const setIng = (i: number, patch: Partial<IngRow>) =>
     setIngredients((rows) => rows.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
@@ -48,7 +50,15 @@ export default function AdminPage() {
     setSteps((rows) => rows.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
 
   function save() {
-    if (!title.trim()) return alert("Please enter a recipe title.");
+    if (!title.trim()) {
+      alert({
+        badge: "✏️",
+        title: "Add a recipe title",
+        message: "Give the recipe a name before generating it.",
+        confirmLabel: "Got it",
+      });
+      return;
+    }
 
     const ings = ingredients
       .filter((r) => r.item.trim())
@@ -57,8 +67,24 @@ export default function AdminPage() {
       .filter((r) => r.text.trim())
       .map((r) => ({ text: r.text.trim(), timer: r.timer.trim() || null }));
 
-    if (ings.length === 0) return alert("Add at least one ingredient.");
-    if (stps.length === 0) return alert("Add at least one step.");
+    if (ings.length === 0) {
+      alert({
+        badge: "🥘",
+        title: "Add an ingredient",
+        message: "Add at least one ingredient before generating.",
+        confirmLabel: "Got it",
+      });
+      return;
+    }
+    if (stps.length === 0) {
+      alert({
+        badge: "📝",
+        title: "Add a step",
+        message: "Add at least one step before generating.",
+        confirmLabel: "Got it",
+      });
+      return;
+    }
 
     const recipe = {
       id: Date.now(),
@@ -78,7 +104,10 @@ export default function AdminPage() {
   }
 
   function copy() {
-    if (exportCode) navigator.clipboard?.writeText(exportCode);
+    if (exportCode) {
+      navigator.clipboard?.writeText(exportCode);
+      toast("Copied to clipboard");
+    }
   }
 
   return (

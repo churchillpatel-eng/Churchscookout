@@ -590,10 +590,73 @@ function renumberSteps() {
   document.querySelectorAll(".step-row .step-num").forEach((el, i) => { el.textContent = i + 1; });
 }
 
+// ── Dialog overlays & toasts (styled replacements for alert/confirm) ──
+function ccDialog({ badge, title, message, confirmLabel, cancelLabel, onConfirm, onCancel }) {
+  const prevFocus = document.activeElement;
+  const overlay = document.createElement("div");
+  overlay.className = "cc-overlay";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.setAttribute("aria-labelledby", "cc-dialog-title");
+  const cancelHtml = cancelLabel
+    ? '<button class="cc-btn cc-btn-ghost" data-act="cancel">' + cancelLabel + "</button>"
+    : "";
+  overlay.innerHTML =
+    '<div class="cc-dialog">' +
+    (badge ? '<div class="cc-dialog-badge" aria-hidden="true">' + badge + "</div>" : "") +
+    '<h2 class="cc-dialog-title" id="cc-dialog-title">' + title + "</h2>" +
+    (message ? '<p class="cc-dialog-msg">' + message + "</p>" : "") +
+    '<div class="cc-dialog-actions">' + cancelHtml +
+    '<button class="cc-btn cc-btn-primary" data-act="confirm">' + confirmLabel + "</button>" +
+    "</div></div>";
+
+  function close() {
+    overlay.remove();
+    document.removeEventListener("keydown", onKey);
+    if (prevFocus && prevFocus.focus) prevFocus.focus();
+  }
+  function onKey(e) { if (e.key === "Escape") { close(); if (onCancel) onCancel(); } }
+
+  overlay.addEventListener("click", function (e) {
+    if (e.target === overlay) { close(); if (onCancel) onCancel(); return; }
+    const act = e.target.getAttribute("data-act");
+    if (act === "cancel") { close(); if (onCancel) onCancel(); }
+    if (act === "confirm") { close(); if (onConfirm) onConfirm(); }
+  });
+  document.addEventListener("keydown", onKey);
+  document.body.appendChild(overlay);
+  const cbtn = overlay.querySelector('[data-act="confirm"]');
+  if (cbtn) cbtn.focus();
+}
+
+function ccAlert(opts) { ccDialog(Object.assign({ confirmLabel: "Got it" }, opts)); }
+
+function ccConfirm(opts, onConfirm) {
+  ccDialog(Object.assign({ confirmLabel: "Confirm", cancelLabel: "Cancel" }, opts, { onConfirm }));
+}
+
+function ccToast(text) {
+  let layer = document.getElementById("cc-toast-layer");
+  if (!layer) {
+    layer = document.createElement("div");
+    layer.id = "cc-toast-layer";
+    layer.className = "cc-toast-layer";
+    layer.setAttribute("aria-live", "polite");
+    document.body.appendChild(layer);
+  }
+  const t = document.createElement("div");
+  t.className = "cc-toast";
+  t.style.pointerEvents = "auto";
+  t.innerHTML = '<span class="cc-toast-dot" aria-hidden="true">✓</span>' + text;
+  layer.appendChild(t);
+  setTimeout(function () { t.classList.add("cc-out"); }, 2200);
+  setTimeout(function () { t.remove(); }, 2500);
+}
+
 // ── Admin: Save & Export ─────────────────────────────────────────────
 function saveRecipe() {
   const title = document.getElementById("f-title").value.trim();
-  if (!title) { alert("Please enter a recipe title."); return; }
+  if (!title) { ccAlert({ badge: "✏️", title: "Add a recipe title", message: "Give the recipe a name before generating it." }); return; }
 
   const ingredients = [];
   document.querySelectorAll(".ingredient-row").forEach(row => {
@@ -610,8 +673,8 @@ function saveRecipe() {
     if (text) steps.push({ text, timer });
   });
 
-  if (ingredients.length === 0) { alert("Add at least one ingredient."); return; }
-  if (steps.length === 0)       { alert("Add at least one step."); return; }
+  if (ingredients.length === 0) { ccAlert({ badge: "🥘", title: "Add an ingredient", message: "Add at least one ingredient before generating." }); return; }
+  if (steps.length === 0)       { ccAlert({ badge: "📝", title: "Add a step", message: "Add at least one step before generating." }); return; }
 
   const recipe = {
     _localId: "local_" + Date.now(),
@@ -647,7 +710,7 @@ function copyExport() {
   const ta = document.getElementById("export-code");
   ta.select();
   document.execCommand("copy");
-  alert("Copied to clipboard!");
+  ccToast("Copied to clipboard");
 }
 
 function clearForm() {
@@ -943,11 +1006,21 @@ function removeSlot(e, day, meal) {
 }
 
 function clearPlan() {
-  if (!confirm("Clear the entire meal plan?")) return;
-  planData = {};
-  savePlan();
-  renderMealPlanner();
-  document.getElementById("shopping-list-output").style.display = "none";
+  ccConfirm(
+    {
+      badge: "🗑️",
+      title: "Clear the entire meal plan?",
+      message: "This removes every recipe from all seven days. You can’t undo it.",
+      confirmLabel: "Clear plan",
+      cancelLabel: "Keep it",
+    },
+    function () {
+      planData = {};
+      savePlan();
+      renderMealPlanner();
+      document.getElementById("shopping-list-output").style.display = "none";
+    }
+  );
 }
 
 function generateShoppingList() {
@@ -965,7 +1038,7 @@ function generateShoppingList() {
   });
 
   if (allIngredients.length === 0) {
-    alert("Add some recipes to your plan first!");
+    ccAlert({ badge: "🛒", title: "Your plan is empty", message: "Add a few recipes to the week before building a shopping list." });
     return;
   }
 
