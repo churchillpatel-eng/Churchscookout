@@ -40,7 +40,7 @@ export default function WorkWithMePage() {
             </div>
             <div className="wwm-stat">
               <span className="stat-value">Multi-Platform</span>
-              <span className="stat-label">Instagram · TikTok · YouTube</span>
+              <span className="stat-label">Instagram · TikTok</span>
             </div>
           </div>
         </section>
@@ -57,7 +57,7 @@ export default function WorkWithMePage() {
             </div>
             <div className="wwm-format-card">
               <div className="wwm-format-icon">🎬</div>
-              <h4>YouTube Integration</h4>
+              <h4>Long-Form Video</h4>
               <p>
                 Dedicated segment or organic mention in long-form recipe videos (8–15 min). Highest
                 engagement and purchase intent.

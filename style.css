@@ -1254,13 +1254,6 @@ main { min-height: 80vh; }
 }
 .social-link--tiktok:hover { background: #1a1a1a; color: white; }
 
-.social-link--youtube {
-  color: #FF0000;
-  border-color: #FF0000;
-  background: #fff0f0;
-}
-.social-link--youtube:hover { background: #FF0000; color: white; }
-
 /* ── Footer social ── */
 .footer-social {
   display: flex;

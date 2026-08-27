@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { InstagramIcon, TikTokIcon, YouTubeIcon } from "@/components/SocialIcons";
+import { InstagramIcon, TikTokIcon } from "@/components/SocialIcons";
 
 export default function SiteFooter() {
   return (
@@ -16,9 +16,6 @@ export default function SiteFooter() {
           </a>
           <a href="https://tiktok.com/@churchscookout" target="_blank" rel="noreferrer" className="footer-social-link" aria-label="TikTok">
             <TikTokIcon size={20} />
-          </a>
-          <a href="https://youtube.com/@churchscookout" target="_blank" rel="noreferrer" className="footer-social-link" aria-label="YouTube">
-            <YouTubeIcon size={20} />
           </a>
         </div>
         <div className="footer-links">
