@@ -7,7 +7,7 @@ export default function SiteFooter() {
       <div className="footer-inner">
         <Link href="/" className="footer-logo" aria-label="Church's Cookout home">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-icon.svg" alt="Church's Cookout" className="footer-logo-svg" />
+          <img src="/logo.png" alt="Church's Cookout" className="footer-logo-svg" />
         </Link>
         <p className="footer-tagline">recipes &nbsp;•&nbsp; stories &nbsp;•&nbsp; flavor</p>
         <div className="footer-social">
