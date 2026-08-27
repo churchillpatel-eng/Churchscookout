@@ -40,7 +40,7 @@ export default function SiteHeader() {
       <header>
         <Link href="/" className="header-logo" aria-label="Church's Cookout home">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.svg" alt="Church's Cookout" className="header-logo-svg" />
+          <img src="/logo.png" alt="Church's Cookout" className="header-logo-svg" />
         </Link>
 
         <nav className="main-nav">
