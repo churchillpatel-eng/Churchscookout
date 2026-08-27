@@ -1286,6 +1286,16 @@ function clearShoppingList() {
   saveShoppingList();
   renderShoppingList();
 }
+function emailShoppingList() {
+  if (!shoppingList.length) return;
+  const lines = shoppingList.map((s) => `${s.checked ? "✓" : "-"} ${s.name}`).join("\n");
+  const body = `My shopping list from Church's Cookout\n\n${lines}\n\nchurchscookout.com`;
+  window.location.href =
+    "mailto:?subject=" +
+    encodeURIComponent("My Church's Cookout Shopping List") +
+    "&body=" +
+    encodeURIComponent(body);
+}
 function renderShoppingList() {
   const el = document.getElementById("pantry-shopping-list");
   if (!el) return;
@@ -1299,7 +1309,7 @@ function renderShoppingList() {
         `<li class="shopping-item${s.checked ? " checked" : ""}"><label><input type="checkbox" ${s.checked ? "checked" : ""} onclick="toggleShoppingItem('${escapeHtml(s.name)}')" />${escapeHtml(s.name)}</label><button type="button" class="shopping-remove" onclick="removeShoppingItem('${escapeHtml(s.name)}')" aria-label="Remove ${escapeHtml(s.name)}">✕</button></li>`,
     )
     .join("");
-  el.innerHTML = `<div class="shopping-panel"><div class="shopping-panel-head"><h3>🛒 Shopping List (${shoppingList.length})</h3><button type="button" class="pantry-clear" onclick="clearShoppingList()">Clear list</button></div><ul class="shopping-panel-list">${items}</ul></div>`;
+  el.innerHTML = `<div class="shopping-panel"><div class="shopping-panel-head"><h3>🛒 Shopping List (${shoppingList.length})</h3><div class="shopping-actions"><button type="button" class="shopping-email" onclick="emailShoppingList()">✉️ Email list</button><button type="button" class="pantry-clear" onclick="clearShoppingList()">Clear list</button></div></div><ul class="shopping-panel-list">${items}</ul></div>`;
 }
 
 function renderPantry() {

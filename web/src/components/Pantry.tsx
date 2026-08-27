@@ -84,6 +84,14 @@ export default function Pantry({ recipes }: { recipes: Recipe[] }) {
   const removeShopping = (name: string) =>
     setShopping((prev) => prev.filter((s) => s.name !== name));
 
+  const emailHref = useMemo(() => {
+    const lines = shopping.map((s) => `${s.checked ? "✓" : "-"} ${s.name}`).join("\n");
+    const body = `My shopping list from Church's Cookout\n\n${lines}\n\nchurchscookout.com`;
+    return `mailto:?subject=${encodeURIComponent(
+      "My Church's Cookout Shopping List",
+    )}&body=${encodeURIComponent(body)}`;
+  }, [shopping]);
+
   return (
     <>
       <div className="page-header">
@@ -171,9 +179,14 @@ export default function Pantry({ recipes }: { recipes: Recipe[] }) {
         <div className="shopping-panel">
           <div className="shopping-panel-head">
             <h3>🛒 Shopping List ({shopping.length})</h3>
-            <button type="button" className="pantry-clear" onClick={() => setShopping([])}>
-              Clear list
-            </button>
+            <div className="shopping-actions">
+              <a className="shopping-email" href={emailHref}>
+                ✉️ Email list
+              </a>
+              <button type="button" className="pantry-clear" onClick={() => setShopping([])}>
+                Clear list
+              </button>
+            </div>
           </div>
           <ul className="shopping-panel-list">
             {shopping.map((s) => (
