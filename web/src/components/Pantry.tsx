@@ -4,11 +4,16 @@ import { useMemo, useState } from "react";
 import type { Recipe } from "@/types";
 import RecipeCard from "@/components/RecipeCard";
 import { useLocalStorage } from "@/lib/storage";
+import { useDialogs } from "@/components/DialogProvider";
 import { buildVocabulary, normalizeIngredient, rankByPantry, type PantryMatch } from "@/lib/pantry";
 
 interface PantryState {
   items: string[];
   assumeStaples: boolean;
+}
+interface ShoppingEntry {
+  name: string;
+  checked: boolean;
 }
 const INITIAL: PantryState = { items: [], assumeStaples: true };
 
@@ -17,8 +22,10 @@ const titleCase = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase());
 
 export default function Pantry({ recipes }: { recipes: Recipe[] }) {
   const [pantry, setPantry, hydrated] = useLocalStorage<PantryState>("cc_pantry", INITIAL);
+  const [shopping, setShopping] = useLocalStorage<ShoppingEntry[]>("cc_shopping_list", []);
   const [draft, setDraft] = useState("");
   const [maxMissing, setMaxMissing] = useState(99);
+  const { confirm, toast } = useDialogs();
 
   const vocabulary = useMemo(() => buildVocabulary(recipes), [recipes]);
 
@@ -39,17 +46,43 @@ export default function Pantry({ recipes }: { recipes: Recipe[] }) {
     setPantry((p) => (p.items.includes(value) ? p : { ...p, items: [...p.items, value] }));
     setDraft("");
   }
-
   function removeItem(value: string) {
     setPantry((p) => ({ ...p, items: p.items.filter((i) => i !== value) }));
   }
-
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       addItem(draft);
     }
   }
+
+  // ── Shopping list ──
+  async function addMissing(missing: string[]) {
+    const names = Array.from(new Set(missing.map(titleCase)));
+    if (!names.length) return;
+    const label = `${names.length} item${names.length === 1 ? "" : "s"}`;
+    const ok = await confirm({
+      badge: "🛒",
+      title: "Add to your shopping list?",
+      message: names.join(", "),
+      confirmLabel: `Add ${label}`,
+      cancelLabel: "Cancel",
+    });
+    if (!ok) return;
+    setShopping((prev) => {
+      const have = new Set(prev.map((s) => s.name));
+      const merged = [...prev];
+      names.forEach((n) => {
+        if (!have.has(n)) merged.push({ name: n, checked: false });
+      });
+      return merged;
+    });
+    toast(`Added ${label} to your shopping list`);
+  }
+  const toggleShopping = (name: string) =>
+    setShopping((prev) => prev.map((s) => (s.name === name ? { ...s, checked: !s.checked } : s)));
+  const removeShopping = (name: string) =>
+    setShopping((prev) => prev.filter((s) => s.name !== name));
 
   return (
     <>
@@ -98,7 +131,11 @@ export default function Pantry({ recipes }: { recipes: Recipe[] }) {
                 </span>
               </button>
             ))}
-            <button type="button" className="pantry-clear" onClick={() => setPantry((p) => ({ ...p, items: [] }))}>
+            <button
+              type="button"
+              className="pantry-clear"
+              onClick={() => setPantry((p) => ({ ...p, items: [] }))}
+            >
               Clear all
             </button>
           </div>
@@ -130,6 +167,35 @@ export default function Pantry({ recipes }: { recipes: Recipe[] }) {
         </div>
       </div>
 
+      {shopping.length > 0 && (
+        <div className="shopping-panel">
+          <div className="shopping-panel-head">
+            <h3>🛒 Shopping List ({shopping.length})</h3>
+            <button type="button" className="pantry-clear" onClick={() => setShopping([])}>
+              Clear list
+            </button>
+          </div>
+          <ul className="shopping-panel-list">
+            {shopping.map((s) => (
+              <li key={s.name} className={`shopping-item${s.checked ? " checked" : ""}`}>
+                <label>
+                  <input type="checkbox" checked={s.checked} onChange={() => toggleShopping(s.name)} />
+                  {s.name}
+                </label>
+                <button
+                  type="button"
+                  className="shopping-remove"
+                  onClick={() => removeShopping(s.name)}
+                  aria-label={`Remove ${s.name}`}
+                >
+                  ✕
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {items.length === 0 ? (
         <div className="empty-state">
           <div className="es-icon">🧑‍🍳</div>
@@ -149,7 +215,7 @@ export default function Pantry({ recipes }: { recipes: Recipe[] }) {
               <h3 className="pantry-group-title">✅ Ready to cook ({ready.length})</h3>
               <div className="recipe-grid">
                 {ready.map((m) => (
-                  <MatchCard key={m.recipe.slug} match={m} />
+                  <MatchCard key={m.recipe.slug} match={m} onAddMissing={addMissing} />
                 ))}
               </div>
             </section>
@@ -159,7 +225,7 @@ export default function Pantry({ recipes }: { recipes: Recipe[] }) {
               <h3 className="pantry-group-title">🛒 Almost there ({almost.length})</h3>
               <div className="recipe-grid">
                 {almost.map((m) => (
-                  <MatchCard key={m.recipe.slug} match={m} />
+                  <MatchCard key={m.recipe.slug} match={m} onAddMissing={addMissing} />
                 ))}
               </div>
             </section>
@@ -170,7 +236,13 @@ export default function Pantry({ recipes }: { recipes: Recipe[] }) {
   );
 }
 
-function MatchCard({ match }: { match: PantryMatch }) {
+function MatchCard({
+  match,
+  onAddMissing,
+}: {
+  match: PantryMatch;
+  onAddMissing: (missing: string[]) => void;
+}) {
   const { recipe, have, total, missing } = match;
   return (
     <div className="pantry-result">
@@ -186,6 +258,11 @@ function MatchCard({ match }: { match: PantryMatch }) {
           </span>
         )}
       </p>
+      {missing.length > 0 && (
+        <button type="button" className="pantry-add-btn" onClick={() => onAddMissing(missing)}>
+          🛒 Add missing to shopping list
+        </button>
+      )}
     </div>
   );
 }

@@ -1130,9 +1130,13 @@ function populateCategorySelect() {
 const PANTRY_STAPLES = ["salt", "black pepper", "peppercorn", "oil", "water", "sugar"];
 let pantryState = readStore("cc_pantry", '{"items":[],"assumeStaples":true}');
 let pantryMaxMissing = 99;
+let shoppingList = readStore("cc_shopping_list", "[]");
 
 function savePantry() {
   localStorage.setItem("cc_pantry", JSON.stringify(pantryState));
+}
+function saveShoppingList() {
+  localStorage.setItem("cc_shopping_list", JSON.stringify(shoppingList));
 }
 
 function pantryNormalize(name) {
@@ -1229,11 +1233,73 @@ function pantryMatchCard(m) {
   const miss = uniqMissing.length
     ? ` · Missing: ${escapeHtml(uniqMissing.map(pantryTitleCase).join(", "))}`
     : "";
+  const addBtn = uniqMissing.length
+    ? `<button type="button" class="pantry-add-btn" onclick="addMissingToShoppingList('${escapeHtml(String(m.recipe.id || m.recipe._localId))}')">🛒 Add missing to shopping list</button>`
+    : "";
   return `
     <div class="pantry-result">
       ${recipeCardHtml(m.recipe)}
       <p class="pantry-match"><strong>You have ${m.have} of ${m.total}</strong>${miss}</p>
+      ${addBtn}
     </div>`;
+}
+
+// ── Pantry: shopping list ──
+function addMissingToShoppingList(id) {
+  const recipe = allRecipes().find((r) => String(r.id || r._localId) === String(id));
+  if (!recipe) return;
+  const m = pantryRank([recipe], pantryState.items, !!pantryState.assumeStaples)[0];
+  const names = Array.from(new Set(m.missing.map(pantryTitleCase)));
+  if (!names.length) return;
+  const label = `${names.length} item${names.length === 1 ? "" : "s"}`;
+  ccConfirm(
+    {
+      badge: "🛒",
+      title: "Add to your shopping list?",
+      message: escapeHtml(names.join(", ")),
+      confirmLabel: `Add ${label}`,
+      cancelLabel: "Cancel",
+    },
+    function () {
+      names.forEach((name) => {
+        if (!shoppingList.some((s) => s.name === name)) shoppingList.push({ name, checked: false });
+      });
+      saveShoppingList();
+      renderShoppingList();
+      ccToast(`Added ${label} to your shopping list`);
+    },
+  );
+}
+function toggleShoppingItem(name) {
+  const it = shoppingList.find((s) => s.name === name);
+  if (it) it.checked = !it.checked;
+  saveShoppingList();
+  renderShoppingList();
+}
+function removeShoppingItem(name) {
+  shoppingList = shoppingList.filter((s) => s.name !== name);
+  saveShoppingList();
+  renderShoppingList();
+}
+function clearShoppingList() {
+  shoppingList = [];
+  saveShoppingList();
+  renderShoppingList();
+}
+function renderShoppingList() {
+  const el = document.getElementById("pantry-shopping-list");
+  if (!el) return;
+  if (!shoppingList.length) {
+    el.innerHTML = "";
+    return;
+  }
+  const items = shoppingList
+    .map(
+      (s) =>
+        `<li class="shopping-item${s.checked ? " checked" : ""}"><label><input type="checkbox" ${s.checked ? "checked" : ""} onclick="toggleShoppingItem('${escapeHtml(s.name)}')" />${escapeHtml(s.name)}</label><button type="button" class="shopping-remove" onclick="removeShoppingItem('${escapeHtml(s.name)}')" aria-label="Remove ${escapeHtml(s.name)}">✕</button></li>`,
+    )
+    .join("");
+  el.innerHTML = `<div class="shopping-panel"><div class="shopping-panel-head"><h3>🛒 Shopping List (${shoppingList.length})</h3><button type="button" class="pantry-clear" onclick="clearShoppingList()">Clear list</button></div><ul class="shopping-panel-list">${items}</ul></div>`;
 }
 
 function renderPantry() {
@@ -1263,6 +1329,9 @@ function renderPantry() {
       chips.innerHTML = `<p class="pantry-hint">Your pantry is empty. Add a few ingredients to get started.</p>`;
     }
   }
+
+  // Shopping list panel
+  renderShoppingList();
 
   // Results
   const out = document.getElementById("pantry-results");
