@@ -1,7 +1,7 @@
 import Link from "next/link";
 import RecipeCard from "@/components/RecipeCard";
 import NewsletterSignup from "@/components/NewsletterSignup";
-import { InstagramIcon, TikTokIcon, YouTubeIcon } from "@/components/SocialIcons";
+import { InstagramIcon, TikTokIcon } from "@/components/SocialIcons";
 import { categoryEmoji, categoryLabel } from "@/data/categories";
 import { categoryCounts, getAllRecipes, getLatestRecipes } from "@/lib/recipes";
 
@@ -107,9 +107,6 @@ export default function HomePage() {
             </a>
             <a href="https://tiktok.com/@churchscookout" target="_blank" rel="noreferrer" className="social-link social-link--tiktok">
               <TikTokIcon /> TikTok
-            </a>
-            <a href="https://youtube.com/@churchscookout" target="_blank" rel="noreferrer" className="social-link social-link--youtube">
-              <YouTubeIcon /> YouTube
             </a>
           </div>
         </section>
