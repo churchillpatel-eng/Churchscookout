@@ -7,6 +7,7 @@ import eggBurji from "./egg-burji";
 import basicRedChileSauce from "./basic-red-chile-sauce";
 import chileMolido from "./chile-molido";
 import kadaiChicken from "./kadai-chicken";
+import turkeyBurgers from "./turkey-burgers";
 
 // ── Recipe Data ──────────────────────────────────────────────────────
 // The source of truth for all published recipes. Each recipe lives in its
@@ -34,4 +35,5 @@ export const RECIPES: Recipe[] = [
   basicRedChileSauce,
   chileMolido,
   kadaiChicken,
+  turkeyBurgers,
 ];
