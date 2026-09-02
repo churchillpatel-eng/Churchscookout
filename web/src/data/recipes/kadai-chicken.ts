@@ -9,7 +9,7 @@ const recipe: Recipe = {
   description:
     "Bone-in chicken in a rich, aromatic tomato gravy built on a fresh-ground kadai masala and finished with cream. Toasting and grinding your own spices is what puts this a mile past any takeout version.",
   servings: 4,
-  category: "chicken",
+  category: "mains",
   emoji: "🍛",
   ingredients: [
     { section: "Marinade" },

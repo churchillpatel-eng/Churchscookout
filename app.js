@@ -53,7 +53,7 @@ const RECIPES = [
     description: "A bright, herb-forward chicken burger built around mint, cilantro, and green garlic.",
     servings: 1,
     yield: "Yields 4",
-    category: "burgers",
+    category: "barbeque",
     emoji: "🍔",
     ingredients: [
       { amount: "1 lb",      item: "Chicken thighs" },

@@ -8,7 +8,7 @@ const recipe: Recipe = {
   description: "A garlic turkey burger with an Indian twist.",
   servings: 1,
   yield: "8",
-  category: "burgers",
+  category: "barbeque",
   emoji: "🍔",
   ingredients: [
     { amount: "2 lb", item: "Ground Turkey" },
