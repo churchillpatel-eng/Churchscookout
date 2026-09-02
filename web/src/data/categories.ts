@@ -16,6 +16,7 @@ export const DIETARY_META: Record<Dietary, CategoryMeta> = {
 // dropdown and every category label/emoji on the site derive from this —
 // add a category here and it appears everywhere automatically.
 export const CATEGORY_META: Record<string, CategoryMeta> = {
+  mains: { label: "Main Entrees", emoji: "🍲" },
   burgers: { label: "Burgers", emoji: "🍔" },
   chicken: { label: "Chicken", emoji: "🍗" },
   beef: { label: "Beef", emoji: "🥩" },

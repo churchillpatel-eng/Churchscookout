@@ -9,7 +9,7 @@ const recipe: Recipe = {
     "A fragrant, creamy egg curry built on toasted fennel seeds, bloomed spices, and coconut milk.",
   servings: 1,
   yield: "1",
-  category: "other",
+  category: "mains",
   emoji: "🍛",
   ingredients: [
     { amount: "3 large", item: "Eggs, Hard-Boiled and Halved" },
