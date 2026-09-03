@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!--
+  Church's Cookout — email newsletter template (for Kit Broadcasts).
+  HOW TO USE: fill every [[PLACEHOLDER]] below, then copy this whole file and
+  paste it into Kit → New Broadcast → source / HTML view (the </> option).
+  All styles are inline because email clients strip <head>/<style>.
+  Do NOT add an unsubscribe or address footer — Kit injects those automatically.
+  Brand palette from style.css: accent #c8703a, gradient #d4845a→#c8703a,
+  warm bg #faf9f7, text #1a1a1a, meta #666.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Church's Cookout Newsletter</title>
+</head>
+<body style="margin:0; padding:0; background:#faf9f7; -webkit-text-size-adjust:100%;">
+  <!-- Preview text: shows in the inbox after the subject. Kit also has its own
+       preview-text field — set it there too. -->
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0; color:#faf9f7; font-size:1px; line-height:1px;">
+    [[PREVIEW_TEXT]]
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#faf9f7;">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+
+        <!-- 600px centered column -->
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px; max-width:600px; background:#ffffff; border:1px solid #e8e8e8; border-radius:4px; overflow:hidden;">
+
+          <!-- Masthead -->
+          <tr>
+            <td align="center" style="background:linear-gradient(135deg,#d4845a,#c8703a); background-color:#c8703a; padding:28px 24px;">
+              <div style="font-family:'Playfair Display',Georgia,serif; font-size:26px; font-weight:700; color:#ffffff; letter-spacing:0.3px;">
+                Church's Cookout
+              </div>
+              <div style="font-family:'Lato',Helvetica,Arial,sans-serif; font-size:12px; color:#f5ede6; letter-spacing:2px; text-transform:uppercase; margin-top:6px;">
+                Indian-inspired, with a twist
+              </div>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 32px 8px 32px;">
+
+              <!-- Hook heading -->
+              <h1 style="margin:0 0 18px 0; font-family:'Playfair Display',Georgia,serif; font-size:26px; line-height:1.25; color:#1a1a1a; font-weight:700;">
+                <!-- [[HOOK]] : the payoff / claim / the turn in the story -->
+                [[HOOK]]
+              </h1>
+
+              <!-- The substance: the story or technique behind the food -->
+              <p style="margin:0 0 16px 0; font-family:'Lato',Helvetica,Arial,sans-serif; font-size:16px; line-height:1.6; color:#2c2c2c;">
+                [[BODY]]
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Featured recipe card -->
+          <tr>
+            <td style="padding:8px 32px 8px 32px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#faf9f7; border:1px solid #f5ede6; border-radius:4px;">
+                <tr>
+                  <td style="padding:22px 24px;">
+                    <div style="font-family:'Lato',Helvetica,Arial,sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#c8703a; font-weight:700; margin-bottom:8px;">
+                      This issue's recipe
+                    </div>
+                    <div style="font-family:'Playfair Display',Georgia,serif; font-size:22px; line-height:1.3; color:#1a1a1a; font-weight:700; margin-bottom:8px;">
+                      <!-- [[RECIPE_NAME]] -->
+                      [[RECIPE_NAME]]
+                    </div>
+                    <p style="margin:0 0 18px 0; font-family:'Lato',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.6; color:#666666;">
+                      <!-- [[RECIPE_TEASER]] : one or two lines that make them want it -->
+                      [[RECIPE_TEASER]]
+                    </p>
+                    <!-- CTA button -->
+                    <table role="presentation" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="background:linear-gradient(135deg,#d4845a,#c8703a); background-color:#c8703a; border-radius:4px;">
+                          <!-- [[RECIPE_SLUG]] : e.g. shish-tawook -->
+                          <a href="https://churchscookout.com/recipes/[[RECIPE_SLUG]]"
+                             style="display:inline-block; padding:13px 26px; font-family:'Lato',Helvetica,Arial,sans-serif; font-size:15px; font-weight:700; color:#ffffff; text-decoration:none;">
+                            Get the full recipe →
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Optional second section: a tip, a swap, what's next. Delete this row
+               if you don't need it. -->
+          <tr>
+            <td style="padding:20px 32px 0 32px;">
+              <p style="margin:0; font-family:'Lato',Helvetica,Arial,sans-serif; font-size:16px; line-height:1.6; color:#2c2c2c;">
+                [[OPTIONAL_SECTION]]
+              </p>
+            </td>
+          </tr>
+
+          <!-- Sign-off -->
+          <tr>
+            <td style="padding:24px 32px 32px 32px;">
+              <p style="margin:0; font-family:'Playfair Display',Georgia,serif; font-size:18px; color:#1a1a1a;">
+                — Churchill
+              </p>
+              <p style="margin:14px 0 0 0; font-family:'Lato',Helvetica,Arial,sans-serif; font-size:14px; color:#999999;">
+                Full recipe at
+                <a href="https://churchscookout.com" style="color:#c8703a; text-decoration:none; font-weight:700;">churchscookout.com</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- Kit appends the required unsubscribe link + mailing address below. -->
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
